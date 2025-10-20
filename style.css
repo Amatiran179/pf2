@@ -1,0 +1,16 @@
+/*
+Theme Name: PutraFiber AI Theme v2 (pf2)
+Theme URI: https://github.com/Amatiran179/pf2
+Author: PutraFiber Lab (Amatiran179)
+Author URI: https://putrafiber.com
+Description: WordPress enterprise theme blueprint – SEO • CTA • Performance • AI-ready.
+Version: 2.0.0
+Requires at least: 6.8
+Tested up to: 6.8
+Requires PHP: 8.2
+License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Text Domain: pf2
+*/
+:root{--pf2-primary:#0ea5e9;--pf2-dark:#0b1220;--pf2-light:#f8fafc}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial,'Noto Sans','Apple Color Emoji','Segoe UI Emoji';}
