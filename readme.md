@@ -208,6 +208,32 @@ chore/*      → tooling, CI, deps, dsb.
 > Ikuti urutan untuk hasil konsisten. Anda boleh *parallelize* sebagian pekerjaan non-blokir.
 
 ### **Batch 0 — Bootstrap & Tooling**
+Kerjakan bootstrap pf2: package.json (vite dev/build/preview), vite.config.js (input front.js & admin.js → output assets/), .editorconfig, .gitignore, phpcs.xml, struktur dasar assets/inc/template-parts. Tambahkan deps: vite,@vitejs/plugin-legacy, swiper, simplelightbox. Pastikan npm run build sukses. Commit "chore: bootstrap project, vite config, deps".
+
+TARGET
+- Inisialisasi proyek pf2, setup Vite, struktur folder minimal, WPCS config, .editorconfig, .gitignore.
+
+TINDAKAN
+1) Buat/isi:
+   - package.json (scripts: dev/build/preview)
+   - vite.config.js (input front.js & admin.js; output ke assets/)
+   - .editorconfig, .gitignore, phpcs.xml
+   - assets/{js,css}/, inc/core/, template-parts/ (kerangka awal)
+2) Siapkan NPM deps: vite, @vitejs/plugin-legacy; deps front: swiper, simplelightbox.
+3) Pastikan `npm run dev` & `npm run build` sukses.
+
+STANDAR KODE
+- ESM untuk JS. Strict mode. Hindari var global tak perlu.
+- PHP: declare strict_types tidak wajib, tapi ikuti WPCS & esc/sanitize.
+
+PERINTAH
+- npm install
+- npm run build
+
+ACCEPTANCE
+- Build selesai tanpa error.
+- Struktur project sesuai tree dasar.
+- Commit: chore: bootstrap project, vite config, deps.
 
 **Tujuan**: inisialisasi proyek, standar koding, tooling.
 **Perintah**
@@ -231,6 +257,27 @@ git push -u origin chore/bootstrap
 ---
 
 ### **Batch 1 — Core Theme & Autoload**
+Tambahkan style.css (header tema lengkap). Buat functions.php memuat inc/core/{autoload.php,setup.php,enqueue.php,hooks.php}. Implement autoloader PF2\, setup theme supports & menus, enqueue mode dev/prod, hooks placeholder. Pastikan tema aktif tanpa fatal. Commit "feat(core): theme supports, autoloader, enqueue skeleton".
+
+TARGET
+- style.css (header tema lengkap)
+- functions.php memuat core: autoload.php, setup.php, enqueue.php, hooks.php
+- inc/core/{autoload.php,setup.php,enqueue.php,hooks.php}
+
+DETAIL IMPLEMENTASI
+- autoloader ringan namespace PF2\ → inc/.../lowercase-path.
+- setup.php: load_theme_textdomain, title-tag, thumbnails, html5, responsive-embeds, nav menus.
+- enqueue.php: mode dev (HMR) vs prod, versikan asset.
+- hooks.php: registrasi awal (placeholder) untuk aksi/filters.
+
+PERINTAH
+- Tidak ada migrasi DB. Aktifkan tema & cek error log.
+
+ACCEPTANCE
+- Tema aktif tanpa fatal error.
+- Asset front & admin bisa dienqueue (prod still minimal).
+- Commit: feat(core): theme supports, autoloader, enqueue skeleton.
+
 
 **Tujuan**: *theme supports*, autoloader, hooks dasar.
 **Perintah**
@@ -248,6 +295,23 @@ git push -u origin feat/core-theme
 ---
 
 ### **Batch 2 — Enqueue (Vite), Front & Admin Entries**
+Buat assets/js/{front.js,admin.js}, assets/css/{front.css,admin.css}, front-page.php (hero + grid portofolio), template-parts/hero/hero-default.php, product/portfolio loop-item, index.php minimal. Pastikan console bersih & build OK. Commit "feat(templates): hero, loops, minimal layout".
+
+TARGET
+- assets/js/front.js, assets/js/admin.js, assets/css/front.css, assets/css/admin.css
+- front-page.php sederhana (hero + grid portofolio)
+- template-parts/hero/hero-default.php, loop-item product/portfolio
+- index.php minimal
+
+DETAIL
+- Pastikan front.js siap untuk inisialisasi CTA/Gallery pada batch selanjutnya.
+- CSS dasar responsif dan komponen kartu.
+
+ACCEPTANCE
+- Halaman depan tampil (hero → grid).
+- Console bebas error. Build sukses.
+- Commit: feat(templates): hero, loops, minimal layout.
+
 
 **Tujuan**: integrasi Vite, entry `assets/js/front.js` & `admin.js`.
 **Perintah**
@@ -265,6 +329,29 @@ git push -u origin feat/enqueue-vite
 ---
 
 ### **Batch 3 — CPT (Produk, Portofolio, Layanan, Tim, Testimoni)**
+Daftarkan CPT: product(/produk), portfolio(/portofolio), service(/layanan), team(/tim), testimonial(/testimoni) di inc/cpt/*.php show_in_rest:true. Flush rewrite. Pastikan UI CPT muncul & add/edit jalan. Commit "feat(cpt): register product/portfolio/service/team/testimonial".
+
+TARGET
+- Buat inc/cpt/{register-product.php,register-portfolio.php,register-service.php,register-team.php,register-testimonial.php}
+- Registrasi labels, supports (title, editor, thumbnail), rewrite slug:
+  - product → /produk/
+  - portfolio → /portofolio/
+  - service → /layanan/
+  - team → /tim/
+  - testimonial → /testimoni/
+
+DETAIL
+- Hook "init" prioritas default. Show in REST (Gutenberg).
+- Tambahkan taxonomy kustom bila perlu (e.g., product_cat), tapi default boleh kosong.
+
+PERINTAH
+- wp rewrite flush --hard (post registrasi CPT)
+- Tambahkan menu di Admin sesuai CPT
+
+ACCEPTANCE
+- CPT muncul di sidebar, bisa add/edit tanpa error.
+- Permalink rapi & 404 tidak terjadi setelah flush.
+- Commit: feat(cpt): register product/portfolio/service/team/testimonial.
 
 **Tujuan**: daftar CPT + labels + rewrite.
 **Perintah**
@@ -282,6 +369,20 @@ git push -u origin feat/cpt
 ---
 
 ### **Batch 4 — Template Parts (Hero, Loop, Single)**
+Lengkapi template parts untuk product/portfolio (loop & single gallery placeholder), perindah front-page sections. Gunakan ukuran gambar WP + alt. Commit "feat(templates): product/portfolio loops & singles".
+
+TARGET
+- Lengkapi template-parts/* untuk product & portfolio (loop-item, single-gallery placeholder).
+- Perkaya front-page.php dengan section produk & CTA ringkas.
+
+DETAIL
+- Buat partial: breadcrumbs.php, card-product.php, card-portfolio.php.
+- Pastikan semua gambar pakai ukuran WP & atribut alt.
+
+ACCEPTANCE
+- Daftar & single tiap CPT tampil sempurna (tanpa style pecah).
+- Lighthouse basic layout OK.
+- Commit: feat(templates): product/portfolio loops & singles.
 
 **Tujuan**: struktur tampilan dasar + *front-page*.
 **Perintah**
@@ -299,6 +400,23 @@ git push -u origin feat/templates
 ---
 
 ### **Batch 5 — CTA System (Inline, Floating, Modal, Exit-Intent)**
+Implement CTA system: inc/helpers/cta.php + inc/templates/cta/{inline,floating,modal}. JS: assets/js/cta/{cta-core,cta-floating,cta-exit-intent}. Render CTA inline akhir konten, floating sticky, modal exit-intent. Logging klik sementara (console); REST menyusul. Commit "feat(cta): inline/floating/modal + exit-intent + basic tracking".
+
+TARGET
+- inc/helpers/cta.php (renderers + logic)
+- inc/templates/cta/{inline.php,floating.php,modal.php}
+- assets/js/cta/{cta-core.js,cta-floating.js,cta-exit-intent.js}
+- hooks untuk menampilkan CTA pada single post & front-page section.
+- Opsi global CTA (nomor WA default, text default) → akan ditautkan batch 8.
+
+DETAIL
+- Buat event tracking (klik CTA) ke REST (akan dihubungkan batch 9).
+- Exit-intent pakai mouseout top metaKey check & debounce.
+
+ACCEPTANCE
+- CTA muncul sesuai posisi (inline akhir konten, floating sticky, modal on exit).
+- Klik CTA ter-log di console sementara (REST menyusul).
+- Commit: feat(cta): inline/floating/modal + exit-intent + basic tracking stub.
 
 **Tujuan**: CTA modular + hooks + event tracking.
 **Perintah**
@@ -316,6 +434,22 @@ git push -u origin feat/cta-system
 ---
 
 ### **Batch 6 — Schema Engine (Auto & Manual)**
+Schema engine: inc/schema/core.php + tipe {product,article,faq,howto,service-area,tourist-attraction,organization,local-business}. Auto-detect by post type; filter pf2_schema_data; output JSON-LD di wp_head. Toggle disable via filter agar tidak konflik SEO plugin. Commit "feat(schema): engine + multiple types + filters".
+
+TARGET
+- inc/schema/core.php (dispatcher + helper)
+- Schema: product.php, article.php, faq.php, howto.php, service-area.php, tourist-attraction.php, organization.php, local-business.php
+- Filter `pf2_schema_data` agar developer bisa modifikasi sebelum output.
+- Output JSON-LD di wp_head dengan prioritas rendah.
+
+DETAIL
+- Auto-detect berdasarkan post type & category.
+- Manual override (nanti UI di batch 8), sementara sediakan filter per-post meta (key reserved).
+
+ACCEPTANCE
+- Valid di Rich Results Test untuk tipe relevan.
+- Tidak dobel output jika plugin SEO lain aktif (sediakan toggle disable via filter).
+- Commit: feat(schema): engine + multiple types + filters.
 
 **Tujuan**: dispatcher schema + tipe: Product, Article, FAQ, HowTo, ServiceArea, TouristAttraction, Organization, LocalBusiness.
 **Perintah**
@@ -333,6 +467,22 @@ git push -u origin feat/schema-engine
 ---
 
 ### **Batch 7 — Gallery Stable (Swiper + SimpleLightbox + Anti-Autozoom)**
+Gallery stabil: inc/helpers/gallery.php, assets/js/gallery/{gallery-init,lightbox-init}. Cegah auto-zoom via CSS dan konfigurasi lightbox. Terapkan pada single product/portfolio. Commit "fix(gallery): stable swiper+lightbox, prevent auto-zoom".
+
+TARGET
+- inc/helpers/gallery.php (API render gallery)
+- assets/js/gallery/{gallery-init.js,lightbox-init.js}
+- CSS anti-autozoom: pastikan gambar tidak overflow, object-fit: contain bila perlu.
+- Template single-gallery untuk product & portfolio finalized.
+
+DETAIL
+- Inisialisasi Swiper (loop, pagination, nav opsional), SimpleLightbox pada anchor group.
+- Lazy-load via loading="lazy" + IntersectionObserver (jika perlu).
+
+ACCEPTANCE
+- Tidak ada auto-zoom bug saat slide/zoom.
+- Lightbox & swipe berjalan mulus di mobile/desktop.
+- Commit: fix(gallery): stable swiper+lightbox, prevent auto-zoom.
 
 **Tujuan**: galeri produk/portofolio stabil + CSS anti-zoom.
 **Perintah**
@@ -350,6 +500,22 @@ git push -u origin fix/gallery-stable
 ---
 
 ### **Batch 8 — Theme Options & Admin Settings UI**
+Theme Options & Settings UI: inc/admin/{menu.php,settings-ui.php}, inc/core/options.php. Field: warna, tipografi, WA, CTA default, hero. Nonce + capability check. Nilai terbaca di front. Commit "feat(admin): theme options + settings UI + sanitize/nonce".
+
+TARGET
+- inc/admin/{menu.php,settings-ui.php}
+- inc/core/options.php (registry get/set)
+- Fields: warna primer, tipografi dasar, kontak (WA), CTA default text, hero title/subtitle.
+- Nonce & capability check (manage_options).
+
+DETAIL
+- Simpan ke wp_options namespace 'pf2_*'.
+- Preview sederhana (enqueue admin.css).
+
+ACCEPTANCE
+- Nilai tersimpan, tervalidasi, terbaca di front.
+- Tidak ada notice/warning.
+- Commit: feat(admin): theme options + settings UI + sanitize/nonce.
 
 **Tujuan**: halaman **PutraFiber → Settings** (warna, tipografi, kontak, CTA default, hero).
 **Perintah**
@@ -367,6 +533,21 @@ git push -u origin feat/admin-settings
 ---
 
 ### **Batch 9 — Dashboard Analytics**
+Dashboard Analytics + REST metrics: inc/admin/{dashboard.php,exporter.php}, inc/rest/metrics.php (POST/GET), assets/js/utils/metrics.js untuk kirim event CTA. Tampilkan total klik CTA & top pages. Export CSV/JSON. Commit "feat(analytics): dashboard metrics + exporter + REST".
+
+TARGET
+- inc/admin/{dashboard.php,exporter.php}
+- inc/rest/metrics.php → namespace pf2/v1: POST /metrics (cta_click), GET /metrics (aggregate).
+- assets/js/utils/metrics.js → kirim event CTA ke REST (nonce + currentUser canRead).
+
+DETAIL
+- Tampilkan cards: total klik CTA hari ini, minggu ini, top 10 halaman.
+- Export CSV & JSON.
+
+ACCEPTANCE
+- Klik CTA tercatat & terbaca di dashboard.
+- Export menghasilkan file valid.
+- Commit: feat(analytics): dashboard metrics + exporter + REST.
 
 **Tujuan**: panel metrik CTA/schema, export data.
 **Perintah**
@@ -384,6 +565,21 @@ git push -u origin feat/analytics
 ---
 
 ### **Batch 10 — Performance (Cache, Lazy, Critical CSS)**
+Performance: inc/performance/{cache.php,critical-css.php,lazyload.php}, assets/css/critical.css + inlining. Cache transient schema/partial, bypass untuk admin. Perbaiki LCP/CLS. Commit "perf: cache layers, critical CSS, lazyload observer".
+
+TARGET
+- inc/performance/{cache.php,critical-css.php,lazyload.php}
+- critical.css di assets/css/ + inlining pada head (opsi via filter).
+- Caching transient untuk schema & template parsial (TTL aman).
+
+DETAIL
+- Hindari cache untuk user logged-in admin.
+- Sediakan CLI hook (nanti batch 14) untuk flush.
+
+ACCEPTANCE
+- LCP/CLS lebih baik (uji Lighthouse).
+- Tidak ada regresi render.
+- Commit: perf: cache layers, critical CSS, lazyload observer.
 
 **Tujuan**: caching transient/object, inlining critical CSS, observer lazy-load.
 **Perintah**
@@ -401,6 +597,21 @@ git push -u origin perf/pipeline
 ---
 
 ### **Batch 11 — REST: AI Content Generator**
+REST AI: inc/rest/index.php register pf2/v1; inc/rest/ai-content.php POST /ai/generate (title,desc,outline). Adapter dummy + filter. Setting API key di Settings UI. Commit "feat(ai): REST generator + settings key adapter".
+
+TARGET
+- inc/rest/index.php (register namespace pf2/v1)
+- inc/rest/ai-content.php (POST /ai/generate → title, meta description, outline)
+- Tambahkan setting API key di Settings UI (reuse batch 8).
+
+DETAIL
+- Endpoint menerima {topic, tone, keywords?}, balikan {title, description, outline}.
+- Implementasi adapter (dummy) + filter agar bisa plug-in OpenAI/Gemini di masa depan.
+
+ACCEPTANCE
+- Request uji (Postman) menghasilkan payload terstruktur.
+- Keamanan: nonce/cap, rate-limit sederhana (transient) untuk admin side.
+- Commit: feat(ai): REST generator + settings key adapter.
 
 **Tujuan**: endpoint AI (title/desc/outline), pengaturan API key.
 **Perintah**
@@ -418,6 +629,20 @@ git push -u origin feat/ai-rest
 ---
 
 ### **Batch 12 — SEO Meta Manager**
+SEO Meta Manager: inc/helpers/seo.php (title,desc,canonical,og/tw). Override per-post sederhana. Toggle disable bila plugin SEO aktif. Commit "feat(seo): meta manager + per-post override + compatibility".
+
+TARGET
+- inc/helpers/seo.php → title, meta description, canonical, og/tw cards.
+- Override per-post via custom fields (sederhana), atau toggle disable bila RankMath/Yoast aktif.
+
+DETAIL
+- Hook ke wp_head, prioritas sebelum schema.
+- Canonical cerdas: paginated, search, 404 di-skip.
+
+ACCEPTANCE
+- Meta muncul benar & tidak duplikat.
+- Kompatibel plugin SEO populer (sediakan filter disable).
+- Commit: feat(seo): meta manager + per-post override + compatibility filters.
 
 **Tujuan**: title, desc, canonical, OG/Twitter Cards; override per post.
 **Perintah**
@@ -435,6 +660,17 @@ git push -u origin feat/seo-meta
 ---
 
 ### **Batch 13 — i18n, A11y, Compliance**
+i18n & A11y: generate languages/pf2.pot; audit aria-label, focus, kontras; bungkus string dengan __()/_e(). Commit "chore(i18n): add POT; a11y tweaks".
+
+TARGET
+- languages/pf2.pot
+- Audit aria-label, keyboard focus states, kontras.
+- Tambahkan teks/label melalui __()/_e() di seluruh template.
+
+ACCEPTANCE
+- POT terbentuk, string bisa diterjemahkan.
+- Aksesibilitas minimal setara WCAG 2.1 AA untuk komponen inti.
+- Commit: chore(i18n): add POT; a11y tweaks.
 
 **Tujuan**: `.pot`, teks siap translate, markup aksesibel.
 **Perintah**
@@ -453,6 +689,21 @@ git push -u origin chore/i18n-a11y
 ---
 
 ### **Batch 14 — Release & Docs**
+Release: finalize README.md & CHANGELOG.md, npm run build, tag v2.0.0, push tag. (Opsional) tambahkan GitHub Actions untuk lint/build. Commit/tag: "docs: finalize README", "chore(release): v2.0.0".
+
+TARGET
+- README.md final, CHANGELOG.md, tag rilis v2.0.0
+- Tambah panduan upgrade & known issues.
+- (Opsional) GitHub Actions untuk lint+build.
+
+PERINTAH
+- npm run build
+- git tag -a v2.0.0 -m "pf2 v2.0.0"
+- git push origin v2.0.0
+
+ACCEPTANCE
+- Build final OK; aktivasi tema sukses; tidak ada fatal.
+- Commit/tag: docs: finalize README; chore(release): v2.0.0
 
 **Tujuan**: dokumentasi final, changelog, tag rilis.
 **Perintah**
