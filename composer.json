@@ -1,0 +1,13 @@
+{
+  "name": "putrafiber/pf2",
+  "description": "PutraFiber AI Theme v2 - Enterprise WordPress Theme",
+  "type": "project",
+  "require": {},
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "wp-coding-standards/wpcs": "^3.0"
+  },
+  "scripts": {
+    "lint": "phpcs -s --standard=phpcs.xml"
+  }
+}

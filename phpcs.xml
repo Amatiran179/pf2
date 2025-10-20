@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ruleset name="pf2 WPCS">
+  <description>WordPress Coding Standards for pf2</description>
+  <file>./</file>
+  <exclude-pattern>vendor/*</exclude-pattern>
+  <exclude-pattern>node_modules/*</exclude-pattern>
+  <rule ref="WordPress-Core"/>
+  <rule ref="WordPress-Docs"/>
+  <rule ref="WordPress-Extra"/>
+  <config name="minimum_supported_wp_version" value="6.8"/>
+  <arg value="sp"/>
+</ruleset>
