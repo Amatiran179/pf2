@@ -34,6 +34,69 @@ if ( ! function_exists( 'pf2_get_vite_host' ) ) {
 	}
 }
 
+if ( ! function_exists( 'pf2_can_use_vite_dev_server' ) ) {
+        /**
+         * Determine whether the Vite development server should be used.
+         *
+         * Performs a lightweight reachability probe to avoid enqueueing
+         * broken dev URLs that would result in console 404s when the dev
+         * server is offline.
+         *
+         * @return bool
+         */
+        function pf2_can_use_vite_dev_server() {
+                if ( ! pf2_is_vite_dev() ) {
+                        return false;
+                }
+
+                $host = pf2_get_vite_host();
+
+                /**
+                 * Allow integrations to short-circuit the dev server probe.
+                 *
+                 * @param bool|null $enabled Whether dev server should be forced on/off.
+                 * @param string    $host    Dev server host URL.
+                 */
+                $pre = apply_filters( 'pf2_vite_dev_precheck', null, $host );
+
+                if ( null !== $pre ) {
+                        return (bool) $pre;
+                }
+
+                static $reachable = array();
+
+                if ( array_key_exists( $host, $reachable ) ) {
+                        return (bool) apply_filters( 'pf2_vite_dev_enabled', $reachable[ $host ], $host );
+                }
+
+                if ( ! function_exists( 'wp_remote_head' ) ) {
+                        $reachable[ $host ] = false;
+
+                        return (bool) apply_filters( 'pf2_vite_dev_enabled', false, $host );
+                }
+
+                $timeout = (float) apply_filters( 'pf2_vite_dev_probe_timeout', 0.75, $host );
+                $timeout = $timeout > 0 ? $timeout : 0.5;
+
+                $response = wp_remote_head(
+                        trailingslashit( $host ) . '@vite/client',
+                        array(
+                                'timeout'     => $timeout,
+                                'redirection' => 1,
+                        )
+                );
+
+                if ( is_wp_error( $response ) ) {
+                        $reachable[ $host ] = false;
+                } else {
+                        $code                = (int) wp_remote_retrieve_response_code( $response );
+                        $reachable[ $host ] = $code >= 200 && $code < 500;
+                }
+
+                return (bool) apply_filters( 'pf2_vite_dev_enabled', $reachable[ $host ], $host );
+        }
+}
+
 if ( ! function_exists( 'pf2_get_asset_path' ) ) {
 	/**
 	 * Resolve an asset path relative to the theme directory.
@@ -90,7 +153,7 @@ if ( ! function_exists( 'pf2_enqueue_front_assets' ) ) {
         function pf2_enqueue_front_assets() {
                 $version = wp_get_theme()->get( 'Version' );
 
-                if ( pf2_is_vite_dev() ) {
+                if ( pf2_can_use_vite_dev_server() ) {
                         pf2_enqueue_vite_dev_script( 'pf2-front', 'assets/js/front.js' );
                         pf2_localize_front_rest_config();
                         return;
@@ -129,11 +192,39 @@ if ( ! function_exists( 'pf2_localize_front_rest_config' ) ) {
          * @return void
          */
         function pf2_localize_front_rest_config() {
+                if ( ! wp_script_is( 'pf2-front', 'enqueued' ) && ! wp_script_is( 'pf2-front', 'registered' ) ) {
+                        return;
+                }
+
                 $data = array(
-                        'restUrl' => esc_url_raw( get_rest_url() ),
+                        'restUrl' => get_rest_url(),
                         'nonce'   => wp_create_nonce( 'wp_rest' ),
-                        'postId'  => absint( get_queried_object_id() ),
+                        'postId'  => get_queried_object_id(),
                 );
+
+                /**
+                 * Filter the localized REST configuration exposed to front scripts.
+                 *
+                 * @param array $data Rest configuration array.
+                 */
+                $data = apply_filters( 'pf2_front_rest_config', $data );
+
+                if ( ! is_array( $data ) ) {
+                        return;
+                }
+
+                $data = wp_parse_args(
+                        $data,
+                        array(
+                                'restUrl' => '',
+                                'nonce'   => '',
+                                'postId'  => 0,
+                        )
+                );
+
+                $data['restUrl'] = esc_url_raw( (string) $data['restUrl'] );
+                $data['nonce']   = is_scalar( $data['nonce'] ) ? sanitize_text_field( (string) $data['nonce'] ) : '';
+                $data['postId']  = absint( $data['postId'] );
 
                 wp_localize_script( 'pf2-front', 'pf2Rest', $data );
         }
@@ -149,10 +240,10 @@ if ( ! function_exists( 'pf2_enqueue_admin_assets' ) ) {
 	function pf2_enqueue_admin_assets( $hook_suffix = '' ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		$version = wp_get_theme()->get( 'Version' );
 
-		if ( pf2_is_vite_dev() ) {
-			pf2_enqueue_vite_dev_script( 'pf2-admin', 'assets/js/admin.js' );
-			return;
-		}
+                if ( pf2_can_use_vite_dev_server() ) {
+                        pf2_enqueue_vite_dev_script( 'pf2-admin', 'assets/js/admin.js' );
+                        return;
+                }
 
 		$style_path  = 'assets/css/admin-bundle.css';
 		$script_path = 'assets/js/admin-bundle.js';
