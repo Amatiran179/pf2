@@ -82,18 +82,19 @@ if ( ! function_exists( 'pf2_enqueue_vite_dev_script' ) ) {
 }
 
 if ( ! function_exists( 'pf2_enqueue_front_assets' ) ) {
-	/**
-	 * Enqueue public-facing assets.
-	 *
-	 * @return void
-	 */
-	function pf2_enqueue_front_assets() {
-		$version = wp_get_theme()->get( 'Version' );
+        /**
+         * Enqueue public-facing assets.
+         *
+         * @return void
+         */
+        function pf2_enqueue_front_assets() {
+                $version = wp_get_theme()->get( 'Version' );
 
-		if ( pf2_is_vite_dev() ) {
-			pf2_enqueue_vite_dev_script( 'pf2-front', 'assets/js/front.js' );
-			return;
-		}
+                if ( pf2_is_vite_dev() ) {
+                        pf2_enqueue_vite_dev_script( 'pf2-front', 'assets/js/front.js' );
+                        pf2_localize_front_rest_config();
+                        return;
+                }
 
 		$style_path  = 'assets/css/front-bundle.css';
 		$script_path = 'assets/js/front-bundle.js';
@@ -110,12 +111,33 @@ if ( ! function_exists( 'pf2_enqueue_front_assets' ) ) {
 			wp_enqueue_style( 'pf2-front', pf2_get_asset_uri( $style_path ), array(), $version );
 		}
 
-		if ( file_exists( pf2_get_asset_path( $script_path ) ) ) {
-			wp_enqueue_script( 'pf2-front', pf2_get_asset_uri( $script_path ), array(), $version, true );
-		}
-	}
+                if ( file_exists( pf2_get_asset_path( $script_path ) ) ) {
+                        wp_enqueue_script( 'pf2-front', pf2_get_asset_uri( $script_path ), array(), $version, true );
+                }
+
+                if ( wp_script_is( 'pf2-front', 'enqueued' ) ) {
+                        pf2_localize_front_rest_config();
+                }
+        }
 }
 add_action( 'wp_enqueue_scripts', 'pf2_enqueue_front_assets' );
+
+if ( ! function_exists( 'pf2_localize_front_rest_config' ) ) {
+        /**
+         * Localize REST configuration for front-end scripts.
+         *
+         * @return void
+         */
+        function pf2_localize_front_rest_config() {
+                $data = array(
+                        'restUrl' => esc_url_raw( get_rest_url() ),
+                        'nonce'   => wp_create_nonce( 'wp_rest' ),
+                        'postId'  => absint( get_queried_object_id() ),
+                );
+
+                wp_localize_script( 'pf2-front', 'pf2Rest', $data );
+        }
+}
 
 if ( ! function_exists( 'pf2_enqueue_admin_assets' ) ) {
 	/**

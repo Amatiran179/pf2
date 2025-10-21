@@ -17,17 +17,35 @@ if ( ! function_exists( 'pf2_admin_menu' ) ) {
 	 *
 	 * @return void
 	 */
-	function pf2_admin_menu() {
-		add_menu_page(
-			__( 'PutraFiber Settings', 'pf2' ),
-			__( 'PutraFiber', 'pf2' ),
-			'manage_options',
-			'pf2',
-			'pf2_admin_settings_page',
-			'dashicons-admin-generic',
-			61
-		);
-	}
+        function pf2_admin_menu() {
+                add_menu_page(
+                        __( 'PutraFiber Dashboard', 'pf2' ),
+                        __( 'PutraFiber', 'pf2' ),
+                        'manage_options',
+                        'pf2',
+                        'pf2_admin_dashboard_page',
+                        'dashicons-admin-generic',
+                        61
+                );
+
+                add_submenu_page(
+                        'pf2',
+                        __( 'Dashboard', 'pf2' ),
+                        __( 'Dashboard', 'pf2' ),
+                        'manage_options',
+                        'pf2',
+                        'pf2_admin_dashboard_page'
+                );
+
+                add_submenu_page(
+                        'pf2',
+                        __( 'Settings', 'pf2' ),
+                        __( 'Settings', 'pf2' ),
+                        'manage_options',
+                        'pf2-settings',
+                        'pf2_admin_settings_page'
+                );
+        }
 }
 add_action( 'admin_menu', 'pf2_admin_menu' );
 
