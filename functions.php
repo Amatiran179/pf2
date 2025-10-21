@@ -19,8 +19,11 @@ require_once get_template_directory() . '/inc/core/hooks.php';
 require_once get_template_directory() . '/inc/helpers/cta.php';
 require_once get_template_directory() . '/inc/helpers/gallery.php';
 require_once get_template_directory() . '/inc/schema/core.php';
+require_once get_template_directory() . '/inc/rest/index.php';
 
 if ( is_admin() ) {
-	require_once get_template_directory() . '/inc/admin/settings-ui.php';
-	require_once get_template_directory() . '/inc/admin/menu.php';
+        require_once get_template_directory() . '/inc/admin/settings-ui.php';
+        require_once get_template_directory() . '/inc/admin/menu.php';
+        require_once get_template_directory() . '/inc/admin/dashboard.php';
+        require_once get_template_directory() . '/inc/admin/exporter.php';
 }

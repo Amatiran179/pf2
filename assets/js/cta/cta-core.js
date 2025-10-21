@@ -1,5 +1,6 @@
 // CTA core interactions: tracking, modal orchestration, and data binding.
 import { $, $$ } from '../utils/dom.js';
+import { pf2SendMetric } from '../utils/metrics.js';
 
 const CLICK_EVENT = 'pf2:cta_click';
 const STORAGE_KEY = 'pf2_cta_events';
@@ -217,6 +218,20 @@ const handleCtaClick = (event) => {
 
   persistEvent(detail);
   dispatchClickEvent(detail);
+
+  const globalPostId = typeof window !== 'undefined' && window.pf2Rest && Number.isInteger(window.pf2Rest.postId)
+    ? window.pf2Rest.postId
+    : 0;
+  const metricPid = Number.isInteger(detail.postId) ? detail.postId : globalPostId;
+  const metricRef = typeof window !== 'undefined' && window.location ? window.location.pathname : '';
+
+  pf2SendMetric('cta_click', {
+    pid: Number.isInteger(metricPid) ? metricPid : 0,
+    ref: metricRef || '',
+    extra: {
+      cta_type: type,
+    },
+  });
 
   if (target.tagName === 'A') {
     target.setAttribute('href', url);
