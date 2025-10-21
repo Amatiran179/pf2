@@ -18,6 +18,7 @@ require_once get_template_directory() . '/inc/core/enqueue.php';
 require_once get_template_directory() . '/inc/core/hooks.php';
 require_once get_template_directory() . '/inc/helpers/cta.php';
 require_once get_template_directory() . '/inc/helpers/gallery.php';
+require_once get_template_directory() . '/inc/admin/meta-register.php';
 require_once get_template_directory() . '/inc/schema/core.php';
 require_once get_template_directory() . '/inc/rest/index.php';
 require_once get_template_directory() . '/inc/performance/cache.php';
@@ -25,6 +26,8 @@ require_once get_template_directory() . '/inc/performance/critical-css.php';
 require_once get_template_directory() . '/inc/performance/lazyload.php';
 
 if ( is_admin() ) {
+        require_once get_template_directory() . '/inc/admin/editor-panels.php';
+        require_once get_template_directory() . '/inc/admin/metaboxes.php';
         require_once get_template_directory() . '/inc/admin/settings-ui.php';
         require_once get_template_directory() . '/inc/admin/menu.php';
         require_once get_template_directory() . '/inc/admin/dashboard.php';
