@@ -131,15 +131,16 @@ if ( ! function_exists( 'pf2_metrics_acquire_lock' ) ) {
         /**
          * Attempt to obtain a short lived metrics lock.
          *
-         * @param int $max_attempts Maximum acquisition attempts.
+         * @param int $timeout Lock acquisition timeout in seconds.
          * @return bool
          */
-        function pf2_metrics_acquire_lock( $max_attempts = 5 ) {
+        function pf2_metrics_acquire_lock( $timeout = 10 ) {
                 $lock_key   = pf2_metrics_get_lock_key();
-                $lock_ttl   = 10;
+                $lock_ttl   = max( 1, (int) $timeout );
                 $wait_micro = 200000; // 0.2 seconds.
+                $deadline   = microtime( true ) + $lock_ttl;
 
-                for ( $attempt = 0; $attempt < $max_attempts; $attempt++ ) {
+                do {
                         if ( add_option( $lock_key, time(), '', 'no' ) ) {
                                 return true;
                         }
@@ -151,8 +152,12 @@ if ( ! function_exists( 'pf2_metrics_acquire_lock' ) ) {
                                 continue;
                         }
 
+                        if ( microtime( true ) >= $deadline ) {
+                                break;
+                        }
+
                         usleep( $wait_micro );
-                }
+                } while ( microtime( true ) < $deadline );
 
                 return false;
         }
@@ -163,12 +168,14 @@ if ( ! function_exists( 'pf2_metrics_append_event' ) ) {
          * Append a single event to the ring buffer.
          *
          * @param array<string, mixed> $event Event payload.
-         * @return void
+         * @return bool True when the event is persisted.
          */
         function pf2_metrics_append_event( array $event ) {
                 if ( ! pf2_metrics_acquire_lock() ) {
-                        return;
+                        return false;
                 }
+
+                $persisted = false;
 
                 try {
                         $events   = pf2_metrics_get_events();
@@ -181,9 +188,12 @@ if ( ! function_exists( 'pf2_metrics_append_event' ) ) {
                         }
 
                         pf2_metrics_save_events( $events );
+                        $persisted = true;
                 } finally {
                         pf2_metrics_release_lock();
                 }
+
+                return $persisted;
         }
 }
 
@@ -581,7 +591,15 @@ if ( ! function_exists( 'pf2_rest_metrics_post' ) ) {
                         'extra' => $extra,
                 );
 
-                pf2_metrics_append_event( $event );
+                if ( ! pf2_metrics_append_event( $event ) ) {
+                        return new WP_Error(
+                                'pf2_metrics_lock_timeout',
+                                __( 'Unable to record metric event at this time.', 'pf2' ),
+                                array(
+                                        'status' => 503,
+                                )
+                        );
+                }
 
                 return new WP_REST_Response(
                         array(
