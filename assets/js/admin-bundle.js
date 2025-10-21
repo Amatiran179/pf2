@@ -1,1 +1,1 @@
-function t(){import.meta.url,import("_").catch(()=>1),async function*(){}().next()}document.addEventListener("DOMContentLoaded",()=>{});export{t as __vite_legacy_guard};
+function t(){import.meta.url,import("_").catch(()=>1),async function*(){}().next()}document.addEventListener("DOMContentLoaded",()=>{document.body&&document.body.classList.add("pf2-admin-js-ready")});export{t as __vite_legacy_guard};
