@@ -10,3 +10,4 @@
   <config name="minimum_supported_wp_version" value="6.8"/>
   <arg value="sp"/>
 </ruleset>
+

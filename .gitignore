@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build output
+dist/
+assets/build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS and tooling
+.DS_Store
+composer.lock
+.idea/
+.vscode/
+
