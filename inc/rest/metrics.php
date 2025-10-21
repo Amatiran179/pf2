@@ -459,18 +459,36 @@ if ( ! function_exists( 'pf2_metrics_rate_limit_allows' ) ) {
         function pf2_metrics_rate_limit_allows( WP_REST_Request $request, $type ) {
                 $fingerprint = pf2_metrics_get_client_fingerprint( $request );
 
+                /**
+                 * Allow short-circuiting the rate limit decision.
+                 *
+                 * @param bool|null        $allow      Null to continue evaluation, boolean to force a result.
+                 * @param WP_REST_Request  $request    The REST request object.
+                 * @param string           $type       Metric type slug.
+                 * @param string           $fingerprint Client fingerprint hash.
+                 */
+                $pre = apply_filters( 'pf2_metrics_rate_limit_pre', null, $request, $type, $fingerprint );
+
+                if ( null !== $pre ) {
+                        return (bool) $pre;
+                }
+
                 if ( '' === $fingerprint ) {
-                        return true;
+                        return (bool) apply_filters( 'pf2_metrics_rate_limit_allows', true, $request, $type, $fingerprint, 0 );
                 }
 
                 $key = 'pf2_rl_' . md5( $fingerprint . '|' . sanitize_key( $type ) );
 
                 if ( get_transient( $key ) ) {
-                        return false;
+                        return (bool) apply_filters( 'pf2_metrics_rate_limit_allows', false, $request, $type, $fingerprint, 0 );
                 }
 
-                set_transient( $key, 1, 5 );
-                return true;
+                $ttl = (int) apply_filters( 'pf2_metrics_rate_limit_ttl', 3, $request, $type, $fingerprint );
+                $ttl = max( 1, $ttl );
+
+                set_transient( $key, 1, $ttl );
+
+                return (bool) apply_filters( 'pf2_metrics_rate_limit_allows', true, $request, $type, $fingerprint, $ttl );
         }
 }
 
@@ -482,9 +500,15 @@ if ( ! function_exists( 'pf2_rest_metrics_post' ) ) {
          * @return WP_Error|WP_REST_Response
          */
         function pf2_rest_metrics_post( WP_REST_Request $request ) {
-                $nonce = $request->get_header( 'x_wp_nonce' );
+                $nonce = $request->get_header( 'x-wp-nonce' );
 
-                if ( ! $nonce || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $nonce ) ), 'wp_rest' ) ) {
+                if ( ! $nonce ) {
+                        $nonce = $request->get_header( 'x_wp_nonce' );
+                }
+
+                $nonce = is_string( $nonce ) ? sanitize_text_field( wp_unslash( $nonce ) ) : '';
+
+                if ( '' === $nonce || ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
                         return new WP_Error( 'pf2_metrics_invalid_nonce', __( 'Invalid submission nonce.', 'pf2' ), array( 'status' => rest_authorization_required_code() ) );
                 }
 
@@ -505,7 +529,8 @@ if ( ! function_exists( 'pf2_rest_metrics_post' ) ) {
                 }
 
                 $pid = isset( $payload['pid'] ) ? absint( $payload['pid'] ) : 0;
-                $ref = isset( $payload['ref'] ) ? sanitize_text_field( $payload['ref'] ) : '';
+                $ref_raw = isset( $payload['ref'] ) ? $payload['ref'] : '';
+                $ref     = is_string( $ref_raw ) ? sanitize_text_field( wp_unslash( $ref_raw ) ) : '';
 
                 if ( $ref ) {
                         $ref = function_exists( 'mb_substr' ) ? mb_substr( $ref, 0, 250 ) : substr( $ref, 0, 250 );
