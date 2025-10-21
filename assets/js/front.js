@@ -1,6 +1,8 @@
-// Entry: Front
+// Front-end bundle entry point.
+import '../css/front.css';
 import './utils/dom.js';
-// Placeholder init
-document.addEventListener('DOMContentLoaded', ()=>{
-  // CTA / Gallery initializers will go here next batches
+
+document.addEventListener('DOMContentLoaded', () => {
+  // CTA and gallery initializers will be registered in future batches.
 });
+

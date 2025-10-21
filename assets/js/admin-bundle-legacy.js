@@ -1,0 +1,1 @@
+System.register([],function(e,t){"use strict";return{execute:function(){var e=document.createElement("style");e.textContent=".pf2-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px}\n/*$vite$:1*/",document.head.appendChild(e),document.addEventListener("DOMContentLoaded",function(){})}}});

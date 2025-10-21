@@ -11,3 +11,4 @@
     "lint": "phpcs -s --standard=phpcs.xml"
   }
 }
+
