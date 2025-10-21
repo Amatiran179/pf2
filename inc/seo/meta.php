@@ -19,6 +19,16 @@ add_action(
                 }
 
                 remove_action( 'wp_head', '_wp_render_title_tag', 1 );
+        },
+        0
+);
+
+add_action(
+        'wp_head',
+        function () {
+                if ( pf2_seo_disabled() ) {
+                        return;
+                }
 
                 $title      = pf2_seo_title();
                 $desc       = pf2_seo_description();
