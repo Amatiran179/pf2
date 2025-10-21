@@ -19,14 +19,26 @@ add_action(
 );
 
 add_filter(
-	'the_content',
-	function ( $content ) {
-		/*
-		 * Placeholder filter for content mutations.
+        'the_content',
+        function ( $content ) {
+                /*
+                 * Placeholder filter for content mutations.
 		 *
 		 * @param string $content The post content to filter.
 		 * @return string
 		 */
 		return $content;
-	}
+        }
+);
+
+add_action(
+        'after_setup_theme',
+        function () {
+                $base = get_template_directory() . '/inc/seo/';
+
+                require_once $base . 'helpers.php';
+                require_once $base . 'meta.php';
+                require_once $base . 'opengraph.php';
+        },
+        5
 );
