@@ -1,4 +1,13 @@
-<?php if (!defined('ABSPATH')) { exit; } ?>
-<div class="pf2-gallery">
-  <?php if (has_post_thumbnail()) the_post_thumbnail('large'); ?>
-</div>
+<?php
+/**
+ * Product gallery placeholder.
+ *
+ * @package PF2\TemplateParts
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+// Product gallery components arrive in future batches.
+

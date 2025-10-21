@@ -1,12 +1,13 @@
 <?php
-if (!defined('ABSPATH')) { exit; }
+/**
+ * Placeholder for shared hooks.
+ *
+ * @package PF2\Core
+ */
 
-/** Example hooks place */
-add_action('init', function(){
-    // Placeholder for CPT registrations in later batches
-});
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-/** Basic filters */
-add_filter('the_content', function($content){
-    return $content;
-});
+// Hooks and filters will be registered in upcoming batches.
+

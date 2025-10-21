@@ -1,2 +1,7 @@
-/* Front bundle (built in dev, simple in prod) */
-.pf2-grid img{display:block;max-width:100%;height:auto}
+/* Front bundle placeholder styles */
+.pf2-grid img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
