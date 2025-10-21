@@ -21,10 +21,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 </head>
 
 <body <?php body_class(); ?>>
+<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'pf2' ); ?></a>
 <?php
 wp_body_open();
 ?>
-<a class="skip-link sr-only" href="#primary"><?php esc_html_e( 'Skip to content', 'pf2' ); ?></a>
 <?php
 do_action( 'pf2_before_header' );
 

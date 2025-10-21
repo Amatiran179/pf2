@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 ?>
-<main id="primary" class="site-main">
+<main id="content" class="site-main" role="main">
 	<?php get_template_part( 'template-parts/hero/hero', 'default' ); ?>
 
 	<section class="pf2-section pf2-section--portfolio" aria-labelledby="pf2-latest-portfolio-heading">

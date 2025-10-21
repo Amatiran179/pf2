@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 ?>
-<main id="primary" class="site-main">
+<main id="content" class="site-main" role="main">
 	<div class="pf2-container">
 		<?php if ( have_posts() ) : ?>
 			<div class="pf2-grid pf2-grid--blog">
