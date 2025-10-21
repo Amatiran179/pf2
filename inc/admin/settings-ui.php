@@ -344,7 +344,7 @@ if ( ! function_exists( 'pf2_admin_render_settings_page' ) ) {
 			$active_tab = 'general';
 		}
 
-		$base_url = menu_page_url( 'pf2', false );
+$base_url = menu_page_url( 'pf2-settings', false );
 
 		echo '<div class="wrap pf2-settings">';
 		echo '<h1 class="pf2-settings__title">' . esc_html__( 'PutraFiber Settings', 'pf2' ) . '</h1>';
