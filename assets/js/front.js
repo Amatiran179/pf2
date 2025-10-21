@@ -4,6 +4,8 @@ import { $ } from './utils/dom.js';
 import './cta/cta-core.js';
 import './cta/cta-floating.js';
 import './cta/cta-exit-intent.js';
+import './gallery/gallery-init.js';
+import './gallery/lightbox-init.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const body = $('body');
