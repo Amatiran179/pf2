@@ -6,54 +6,70 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-        exit;
+		exit;
 }
 
 if ( ! function_exists( 'pf2_schema_build_tourist_attraction' ) ) {
-        /**
-         * Build a TouristAttraction schema payload.
-         *
-         * @param \WP_Post $post Post context.
-         * @return array
-         */
-        function pf2_schema_build_tourist_attraction( $post ) {
-                if ( ! $post instanceof \WP_Post ) {
-                        return array();
-                }
+		/**
+		 * Build a TouristAttraction schema payload.
+		 *
+		 * @param \WP_Post $post Post context.
+		 * @return array
+		 */
+		function pf2_schema_build_tourist_attraction( $post ) {
+				if ( ! $post instanceof \WP_Post ) {
+						return array();
+				}
 
-                $post_id = (int) $post->ID;
+				$post_id = (int) $post->ID;
 
-                $data = array(
-                        '@context'   => 'https://schema.org',
-                        '@type'      => 'TouristAttraction',
-                        'name'       => wp_strip_all_tags( get_the_title( $post ) ),
-                        'description' => wp_strip_all_tags( get_the_excerpt( $post ) ),
-                        'image'      => pf2_schema_images_from_post( $post_id ),
-                        'url'        => esc_url_raw( get_permalink( $post ) ),
-                        'address'    => pf2_schema_build_postal_address( $post_id ),
-                        'telephone'  => pf2_schema_get_meta_text( $post_id, 'pf2_contact_phone' ),
-                        'openingHoursSpecification' => array(),
-                );
+				$product_name = pf2_schema_get_meta_text( $post_id, 'pf2_product_name' );
+				$client       = pf2_schema_get_meta_text( $post_id, 'pf2_client' );
+				$location_raw = pf2_schema_get_meta_text( $post_id, 'pf2_location' );
 
-                $opening_hours = get_post_meta( $post_id, 'pf2_opening_hours', true );
-                if ( is_array( $opening_hours ) ) {
-                        $specs = array();
-                        foreach ( $opening_hours as $spec ) {
-                                if ( ! is_array( $spec ) ) {
-                                        continue;
-                                }
+				$location = array();
+				if ( $location_raw ) {
+						$location = array(
+								'@type' => 'Place',
+								'name'  => $location_raw,
+						);
 
-                                $specs[] = array(
-                                        '@type'     => 'OpeningHoursSpecification',
-                                        'dayOfWeek' => isset( $spec['day'] ) ? wp_strip_all_tags( $spec['day'] ) : '',
-                                        'opens'     => isset( $spec['opens'] ) ? wp_strip_all_tags( $spec['opens'] ) : '',
-                                        'closes'    => isset( $spec['closes'] ) ? wp_strip_all_tags( $spec['closes'] ) : '',
-                                );
-                        }
+						if ( filter_var( $location_raw, FILTER_VALIDATE_URL ) ) {
+								$location['url'] = esc_url_raw( $location_raw );
+						} else {
+								$location['url'] = 'https://maps.google.com/?q=' . rawurlencode( $location_raw );
+						}
+				}
 
-                        $data['openingHoursSpecification'] = $specs;
-                }
+				$about = array();
+				if ( $product_name ) {
+						$about = array(
+								'@type' => 'Product',
+								'name'  => $product_name,
+						);
+				}
 
-                return pf2_schema_array_filter_recursive( $data );
-        }
+				$description = wp_strip_all_tags( get_the_excerpt( $post ) );
+				if ( '' === $description ) {
+						$description = wp_strip_all_tags( get_the_content( null, false, $post ) );
+				}
+
+				$data = array(
+						'@context'      => 'https://schema.org',
+						'@type'         => 'CreativeWork',
+						'name'          => wp_strip_all_tags( get_the_title( $post ) ),
+						'description'   => $description,
+						'image'         => pf2_schema_images_from_post( $post_id ),
+						'url'           => esc_url_raw( get_permalink( $post ) ),
+						'about'         => $about,
+						'location'      => $location,
+						'datePublished' => get_post_time( 'c', true, $post ),
+						'creator'       => $client ? array(
+								'@type' => 'Organization',
+								'name'  => $client,
+						) : array(),
+				);
+
+				return pf2_schema_array_filter_recursive( $data );
+		}
 }

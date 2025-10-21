@@ -191,6 +191,131 @@ body {
   border-radius: var(--pf2-radius-lg);
 }
 
+.pf2-title--center {
+  text-align: center;
+  margin: 0 0 1.25rem;
+}
+
+.pf2-grid-2 {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1.2fr 0.8fr;
+}
+
+@media (max-width: 900px) {
+  .pf2-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pf2-single__article {
+  background-color: var(--pf2-color-surface);
+  border-radius: var(--pf2-radius-lg);
+  box-shadow: var(--pf2-shadow-md);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  margin-bottom: var(--pf2-spacing-lg);
+}
+
+.pf2-single__media img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.pf2-single__info .pf2-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pf2-single__info .pf2-table th,
+.pf2-single__info .pf2-table td {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  text-align: left;
+}
+
+.pf2-single__info .pf2-table th {
+  font-weight: 600;
+  color: var(--pf2-color-muted);
+  padding-right: 16px;
+}
+
+.pf2-single__features {
+  margin-top: 16px;
+}
+
+.pf2-single__features-title {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.pf2-single__features ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--pf2-color-text);
+}
+
+.pf2-cta-wrap {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.pf2-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pf2-btn:focus-visible,
+.pf2-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 20px rgba(15, 23, 42, 0.14);
+}
+
+.pf2-btn--wa {
+  background-color: #25d366;
+  color: #fff;
+}
+
+.pf2-btn--secondary {
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  color: var(--pf2-color-text);
+  background-color: #fff;
+}
+
+.pf2-single__content {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.pf2-single__related {
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.pf2-h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.pf2-related-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.pf2-single__article .pf2-related-grid .pf2-card {
+  height: 100%;
+}
+
 .pf2-footer {
   background-color: #0f172a;
   color: rgba(255, 255, 255, 0.86);

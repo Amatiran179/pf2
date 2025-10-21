@@ -114,31 +114,35 @@ if ( ! function_exists( 'pf2_schema_images_from_post' ) ) {
         function pf2_schema_images_from_post( $post_id ) {
                 $images = array();
 
-                $featured = get_post_thumbnail_id( $post_id );
-                if ( $featured ) {
-                        $featured_url = wp_get_attachment_image_url( $featured, 'full' );
-                        if ( $featured_url ) {
-                                $images[] = esc_url_raw( $featured_url );
-                        }
-                }
+                $gallery_meta = get_post_meta( $post_id, 'pf2_gallery_ids', true );
+                if ( is_string( $gallery_meta ) && '' !== $gallery_meta ) {
+                        $parts = preg_split( '/,/', $gallery_meta );
+                        if ( is_array( $parts ) ) {
+                                foreach ( $parts as $part ) {
+                                        $attachment_id = absint( trim( (string) $part ) );
+                                        if ( ! $attachment_id ) {
+                                                continue;
+                                        }
 
-                $attachments = get_attached_media( 'image', $post_id );
-                if ( ! empty( $attachments ) ) {
-                        foreach ( $attachments as $attachment ) {
-                                if ( ! isset( $attachment->ID ) ) {
-                                        continue;
-                                }
-
-                                $url = wp_get_attachment_image_url( (int) $attachment->ID, 'full' );
-                                if ( $url ) {
-                                        $images[] = esc_url_raw( $url );
+                                        $url = wp_get_attachment_image_url( $attachment_id, 'full' );
+                                        if ( $url ) {
+                                                $images[] = esc_url_raw( $url );
+                                        }
                                 }
                         }
                 }
 
-                $images = array_values( array_unique( array_filter( $images ) ) );
+                if ( empty( $images ) ) {
+                        $featured = get_post_thumbnail_id( $post_id );
+                        if ( $featured ) {
+                                $featured_url = wp_get_attachment_image_url( $featured, 'full' );
+                                if ( $featured_url ) {
+                                        $images[] = esc_url_raw( $featured_url );
+                                }
+                        }
+                }
 
-                return $images;
+                return array_values( array_unique( array_filter( $images ) ) );
         }
 }
 

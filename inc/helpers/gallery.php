@@ -64,44 +64,40 @@ if ( ! function_exists( 'pf2_gallery_get_images' ) ) {
                         return array();
                 }
 
-                $images      = array();
-                $unique_ids  = array();
-                $featured_id = get_post_thumbnail_id( $post_id );
+                $images     = array();
+                $unique_ids = array();
 
-                if ( $featured_id ) {
-                        $data = pf2_gallery_prepare_image_data( $featured_id );
-                        if ( $data ) {
-                                $images[]             = $data;
-                                $unique_ids[ $data['id'] ] = true;
+                $csv_meta = get_post_meta( $post_id, 'pf2_gallery_ids', true );
+                $meta_ids = array();
+
+                if ( is_string( $csv_meta ) && '' !== $csv_meta ) {
+                        $parts = preg_split( '/,/', $csv_meta );
+                        if ( is_array( $parts ) ) {
+                                foreach ( $parts as $part ) {
+                                        $id = absint( trim( (string) $part ) );
+                                        if ( $id && ! isset( $unique_ids[ $id ] ) ) {
+                                                $meta_ids[]          = $id;
+                                                $unique_ids[ $id ] = true;
+                                        }
+                                }
                         }
                 }
 
-                $attachment_args = array(
-                        'post_type'      => 'attachment',
-                        'numberposts'    => -1,
-                        'post_status'    => 'inherit',
-                        'post_mime_type' => 'image',
-                        'post_parent'    => $post_id,
-                        'orderby'        => 'menu_order',
-                        'order'          => 'ASC',
-                        'fields'         => 'ids',
-                );
+                foreach ( $meta_ids as $attachment_id ) {
+                        $data = pf2_gallery_prepare_image_data( $attachment_id );
 
-                $gallery_ids = get_posts( $attachment_args );
+                        if ( $data ) {
+                                $images[] = $data;
+                        }
+                }
 
-                if ( $gallery_ids ) {
-                        foreach ( $gallery_ids as $gallery_id ) {
-                                $gallery_id = absint( $gallery_id );
+                if ( empty( $images ) ) {
+                        $featured_id = get_post_thumbnail_id( $post_id );
 
-                                if ( ! $gallery_id || isset( $unique_ids[ $gallery_id ] ) ) {
-                                        continue;
-                                }
-
-                                $data = pf2_gallery_prepare_image_data( $gallery_id );
-
+                        if ( $featured_id ) {
+                                $data = pf2_gallery_prepare_image_data( $featured_id );
                                 if ( $data ) {
-                                        $images[]                 = $data;
-                                        $unique_ids[ $data['id'] ] = true;
+                                        $images[] = $data;
                                 }
                         }
                 }
