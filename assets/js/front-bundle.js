@@ -1,1 +1,1 @@
-function t(){import.meta.url,import("_").catch(()=>1),async function*(){}().next()}document.addEventListener("DOMContentLoaded",()=>{});export{t as __vite_legacy_guard};
+function o(){import.meta.url,import("_").catch(()=>1),async function*(){}().next()}const n=(t,e=document)=>e.querySelector(t);document.addEventListener("DOMContentLoaded",()=>{const t=n("body");t&&t.classList.add("pf2-js-ready")});export{o as __vite_legacy_guard};

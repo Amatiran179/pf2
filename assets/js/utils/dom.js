@@ -1,3 +1,5 @@
-export const $ = (sel, ctx=document) => ctx.querySelector(sel);
-export const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
-
+/**
+ * Lightweight DOM helpers.
+ */
+export const $ = (selector, context = document) => context.querySelector(selector);
+export const $$ = (selector, context = document) => Array.from(context.querySelectorAll(selector));
