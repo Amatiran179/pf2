@@ -105,6 +105,59 @@ if ( ! function_exists( 'pf2_metrics_normalize_extra' ) ) {
         }
 }
 
+if ( ! function_exists( 'pf2_metrics_get_lock_key' ) ) {
+        /**
+         * Retrieve the option key used for the metrics lock.
+         *
+         * @return string
+         */
+        function pf2_metrics_get_lock_key() {
+                return pf2_metrics_get_option_key() . '_lock';
+        }
+}
+
+if ( ! function_exists( 'pf2_metrics_release_lock' ) ) {
+        /**
+         * Release the metrics lock.
+         *
+         * @return void
+         */
+        function pf2_metrics_release_lock() {
+                delete_option( pf2_metrics_get_lock_key() );
+        }
+}
+
+if ( ! function_exists( 'pf2_metrics_acquire_lock' ) ) {
+        /**
+         * Attempt to obtain a short lived metrics lock.
+         *
+         * @param int $max_attempts Maximum acquisition attempts.
+         * @return bool
+         */
+        function pf2_metrics_acquire_lock( $max_attempts = 5 ) {
+                $lock_key   = pf2_metrics_get_lock_key();
+                $lock_ttl   = 10;
+                $wait_micro = 200000; // 0.2 seconds.
+
+                for ( $attempt = 0; $attempt < $max_attempts; $attempt++ ) {
+                        if ( add_option( $lock_key, time(), '', 'no' ) ) {
+                                return true;
+                        }
+
+                        $locked_at = (int) get_option( $lock_key, 0 );
+
+                        if ( $locked_at > 0 && ( time() - $locked_at ) > $lock_ttl ) {
+                                pf2_metrics_release_lock();
+                                continue;
+                        }
+
+                        usleep( $wait_micro );
+                }
+
+                return false;
+        }
+}
+
 if ( ! function_exists( 'pf2_metrics_append_event' ) ) {
         /**
          * Append a single event to the ring buffer.
@@ -113,16 +166,24 @@ if ( ! function_exists( 'pf2_metrics_append_event' ) ) {
          * @return void
          */
         function pf2_metrics_append_event( array $event ) {
-                $events = pf2_metrics_get_events();
-                $events[] = $event;
-
-                $excess = count( $events ) - pf2_metrics_get_max_events();
-
-                if ( $excess > 0 ) {
-                        $events = array_slice( $events, $excess );
+                if ( ! pf2_metrics_acquire_lock() ) {
+                        return;
                 }
 
-                pf2_metrics_save_events( $events );
+                try {
+                        $events   = pf2_metrics_get_events();
+                        $events[] = $event;
+
+                        $excess = count( $events ) - pf2_metrics_get_max_events();
+
+                        if ( $excess > 0 ) {
+                                $events = array_slice( $events, $excess );
+                        }
+
+                        pf2_metrics_save_events( $events );
+                } finally {
+                        pf2_metrics_release_lock();
+                }
         }
 }
 
