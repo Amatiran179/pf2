@@ -16,3 +16,4 @@ require_once get_template_directory() . '/inc/core/setup.php';
 require_once get_template_directory() . '/inc/core/enqueue.php';
 require_once get_template_directory() . '/inc/core/hooks.php';
 require_once get_template_directory() . '/inc/helpers/cta.php';
+require_once get_template_directory() . '/inc/schema/core.php';
