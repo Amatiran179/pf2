@@ -171,26 +171,46 @@ if ( ! function_exists( 'pf2_cache_flush_all' ) ) {
                         return 0;
                 }
 
-                $deleted = 0;
+                $deleted          = 0;
+                $transient_prefix = '_transient_';
+                $site_prefix      = '_site_transient_';
 
-                $option_like = $wpdb->esc_like( '_transient_' . PF2_CACHE_PREFIX ) . '%';
-                $deleted    += (int) $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $option_like ) );
+                $transient_like = $wpdb->esc_like( $transient_prefix . PF2_CACHE_PREFIX ) . '%';
+                $transients     = (array) $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $transient_like ) );
 
-                $timeout_like = $wpdb->esc_like( '_transient_timeout_' . PF2_CACHE_PREFIX ) . '%';
-                $deleted     += (int) $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $timeout_like ) );
+                foreach ( $transients as $option_name ) {
+                        $key = substr( $option_name, strlen( $transient_prefix ) );
 
-                $site_transient_like = $wpdb->esc_like( '_site_transient_' . PF2_CACHE_PREFIX ) . '%';
-                $deleted            += (int) $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $site_transient_like ) );
+                        if ( '' !== $key && delete_transient( $key ) ) {
+                                $deleted++;
+                        }
+                }
 
-                $site_timeout_like = $wpdb->esc_like( '_site_transient_timeout_' . PF2_CACHE_PREFIX ) . '%';
-                $deleted          += (int) $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $site_timeout_like ) );
+                $site_transients = array();
+
+                $site_like      = $wpdb->esc_like( $site_prefix . PF2_CACHE_PREFIX ) . '%';
+                $site_transients = array_merge(
+                        $site_transients,
+                        (array) $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $site_like ) )
+                );
 
                 if ( is_multisite() ) {
-                        $network_like = $wpdb->esc_like( '_site_transient_' . PF2_CACHE_PREFIX ) . '%';
-                        $deleted     += (int) $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->sitemeta} WHERE meta_key LIKE %s", $network_like ) );
+                        $site_transients = array_merge(
+                                $site_transients,
+                                (array) $wpdb->get_col( $wpdb->prepare( "SELECT meta_key FROM {$wpdb->sitemeta} WHERE meta_key LIKE %s", $site_like ) )
+                        );
+                }
 
-                        $network_timeout_like = $wpdb->esc_like( '_site_transient_timeout_' . PF2_CACHE_PREFIX ) . '%';
-                        $deleted             += (int) $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->sitemeta} WHERE meta_key LIKE %s", $network_timeout_like ) );
+                if ( $site_transients ) {
+                        $site_transients = array_unique( $site_transients );
+
+                        foreach ( $site_transients as $option_name ) {
+                                $key = substr( $option_name, strlen( $site_prefix ) );
+
+                                if ( '' !== $key && delete_site_transient( $key ) ) {
+                                        $deleted++;
+                                }
+                        }
                 }
 
                 return $deleted;
