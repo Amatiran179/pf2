@@ -278,51 +278,68 @@ if ( ! function_exists( 'pf2_options_sanitize' ) ) {
 			$input = array();
 		}
 
-		foreach ( $schema as $config ) {
-			if ( empty( $config['fields'] ) || ! is_array( $config['fields'] ) ) {
-				continue;
-			}
+		$active_tab = 'general';
 
-			foreach ( $config['fields'] as $key => $field ) {
-				$mode    = isset( $field['sanitize'] ) ? $field['sanitize'] : 'string';
-				$default = isset( $defaults[ $key ] ) ? $defaults[ $key ] : '';
+		if ( isset( $_POST['pf2_options_active_tab'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$active_tab = sanitize_key( wp_unslash( $_POST['pf2_options_active_tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		}
 
-				switch ( $mode ) {
-					case 'bool':
-						$sanitized[ $key ] = ! empty( $input[ $key ] ) ? 1 : 0;
-						break;
-					case 'url':
-						$value = isset( $input[ $key ] ) ? trim( (string) wp_unslash( $input[ $key ] ) ) : '';
-						if ( '' !== $value ) {
-							$sanitized[ $key ] = esc_url_raw( $value );
-						} else {
-							$sanitized[ $key ] = '';
-						}
-						break;
-					case 'color':
-						$value = isset( $input[ $key ] ) ? wp_unslash( $input[ $key ] ) : '';
-						$value = is_string( $value ) ? trim( $value ) : '';
-						if ( is_string( $value ) && preg_match( '/^#([A-Fa-f0-9]{3}){1,2}$/', $value ) ) {
-							$sanitized[ $key ] = strtolower( $value );
-						} else {
-							$sanitized[ $key ] = $default;
-						}
-						break;
-					case 'textarea':
-						if ( isset( $input[ $key ] ) ) {
-							$sanitized[ $key ] = sanitize_textarea_field( wp_unslash( $input[ $key ] ) );
-						} else {
-							$sanitized[ $key ] = '';
-						}
-						break;
-					default:
-						if ( isset( $input[ $key ] ) ) {
-							$sanitized[ $key ] = sanitize_text_field( wp_unslash( $input[ $key ] ) );
-						} else {
-							$sanitized[ $key ] = '';
-						}
-						break;
-				}
+		if ( ! isset( $schema[ $active_tab ] ) ) {
+			$active_tab = 'general';
+		}
+
+		if ( empty( $schema[ $active_tab ]['fields'] ) || ! is_array( $schema[ $active_tab ]['fields'] ) ) {
+			return $sanitized;
+		}
+
+		foreach ( $schema[ $active_tab ]['fields'] as $key => $field ) {
+			$mode      = isset( $field['sanitize'] ) ? $field['sanitize'] : 'string';
+			$default   = isset( $defaults[ $key ] ) ? $defaults[ $key ] : '';
+			$has_value = array_key_exists( $key, $input );
+
+			switch ( $mode ) {
+			        case 'bool':
+			                $sanitized[ $key ] = ( $has_value && ! empty( $input[ $key ] ) ) ? 1 : 0;
+			                break;
+			        case 'url':
+			                if ( ! $has_value ) {
+			                        break;
+			                }
+
+			                $value = trim( (string) wp_unslash( $input[ $key ] ) );
+			                if ( '' !== $value ) {
+			                        $sanitized[ $key ] = esc_url_raw( $value );
+			                } else {
+			                        $sanitized[ $key ] = '';
+			                }
+			                break;
+			        case 'color':
+			                if ( ! $has_value ) {
+			                        break;
+			                }
+
+			                $value = wp_unslash( $input[ $key ] );
+			                $value = is_string( $value ) ? trim( $value ) : '';
+			                if ( is_string( $value ) && preg_match( '/^#([A-Fa-f0-9]{3}){1,2}$/', $value ) ) {
+			                        $sanitized[ $key ] = strtolower( $value );
+			                } else {
+			                        $sanitized[ $key ] = $default;
+			                }
+			                break;
+			        case 'textarea':
+			                if ( ! $has_value ) {
+			                        break;
+			                }
+
+			                $sanitized[ $key ] = sanitize_textarea_field( wp_unslash( $input[ $key ] ) );
+			                break;
+			        default:
+			                if ( ! $has_value ) {
+			                        break;
+			                }
+
+			                $sanitized[ $key ] = sanitize_text_field( wp_unslash( $input[ $key ] ) );
+			                break;
 			}
 		}
 
@@ -380,6 +397,10 @@ if ( ! function_exists( 'pf2_admin_render_settings_page' ) ) {
 
 		echo '<form method="post" action="options.php" class="pf2-settings__form">';
 		settings_fields( 'pf2_options_group' );
+		printf(
+			'<input type="hidden" name="pf2_options_active_tab" value="%s" />',
+			esc_attr( $active_tab )
+		);
 		echo '<div class="pf2-settings__card">';
 		echo '<table class="form-table pf2-settings__table" role="presentation">';
 		do_settings_sections( 'pf2_' . $active_tab );
