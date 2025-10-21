@@ -209,57 +209,63 @@ if ( ! function_exists( 'pf2_admin_render_field' ) ) {
 			return;
 		}
 
-		$value      = pf2_options_get( $key, isset( $defaults[ $key ] ) ? $defaults[ $key ] : '' );
-		$control    = isset( $args['control'] ) ? $args['control'] : 'text';
-		$input_type = isset( $args['input_type'] ) ? $args['input_type'] : 'text';
-		$id         = 'pf2_options_' . $key;
-		$class      = isset( $args['class'] ) ? $args['class'] : 'regular-text';
-		$attributes = array();
+                $value          = pf2_options_get( $key, isset( $defaults[ $key ] ) ? $defaults[ $key ] : '' );
+                $control        = isset( $args['control'] ) ? $args['control'] : 'text';
+                $input_type     = isset( $args['input_type'] ) ? $args['input_type'] : 'text';
+                $id             = 'pf2_options_' . $key;
+                $class          = isset( $args['class'] ) ? $args['class'] : 'regular-text';
+                $attributes     = array();
+                $description    = isset( $args['description'] ) ? $args['description'] : '';
+                $description_id = $description ? $id . '_description' : '';
+                $aria_attribute = $description_id ? ' aria-describedby="' . esc_attr( $description_id ) . '"' : '';
 
-		if ( isset( $args['attributes'] ) && is_array( $args['attributes'] ) ) {
-			$attributes = $args['attributes'];
-		}
+                if ( isset( $args['attributes'] ) && is_array( $args['attributes'] ) ) {
+                        $attributes = $args['attributes'];
+                }
 
-		switch ( $control ) {
-			case 'checkbox':
-				printf(
-					'<input type="checkbox" id="%1$s" name="pf2_options[%2$s]" value="1" %3$s />',
-					esc_attr( $id ),
-					esc_attr( $key ),
-					checked( (int) $value, 1, false )
-				);
-				break;
-			case 'textarea':
-				$rows = isset( $attributes['rows'] ) ? (int) $attributes['rows'] : 4;
-				printf(
-					'<textarea id="%1$s" name="pf2_options[%2$s]" rows="%3$d" class="large-text">%4$s</textarea>',
-					esc_attr( $id ),
-					esc_attr( $key ),
-					max( 2, $rows ),
-					esc_textarea( $value )
-				);
-				break;
-			default:
-				$attr_html = '';
-				foreach ( $attributes as $attr_key => $attr_value ) {
-					$attr_html .= sprintf( ' %1$s="%2$s"', esc_attr( $attr_key ), esc_attr( $attr_value ) );
-				}
-				printf(
-					'<input type="%1$s" id="%2$s" name="pf2_options[%3$s]" value="%4$s" class="%5$s"%6$s />',
-					esc_attr( $input_type ),
-					esc_attr( $id ),
-					esc_attr( $key ),
-					esc_attr( $value ),
-					esc_attr( $class ),
-					$attr_html
-				);
-				break;
-		}
+                switch ( $control ) {
+                        case 'checkbox':
+                                printf(
+                                        '<input type="checkbox" id="%1$s" name="pf2_options[%2$s]" value="1"%3$s%4$s />',
+                                        esc_attr( $id ),
+                                        esc_attr( $key ),
+                                        checked( (int) $value, 1, false ),
+                                        $aria_attribute
+                                );
+                                break;
+                        case 'textarea':
+                                $rows = isset( $attributes['rows'] ) ? (int) $attributes['rows'] : 4;
+                                printf(
+                                        '<textarea id="%1$s" name="pf2_options[%2$s]" rows="%3$d" class="large-text"%5$s>%4$s</textarea>',
+                                        esc_attr( $id ),
+                                        esc_attr( $key ),
+                                        max( 2, $rows ),
+                                        esc_textarea( $value ),
+                                        $aria_attribute
+                                );
+                                break;
+                        default:
+                                $attr_html = '';
+                                foreach ( $attributes as $attr_key => $attr_value ) {
+                                        $attr_html .= sprintf( ' %1$s="%2$s"', esc_attr( $attr_key ), esc_attr( $attr_value ) );
+                                }
+                                printf(
+                                        '<input type="%1$s" id="%2$s" name="pf2_options[%3$s]" value="%4$s" class="%5$s"%6$s%7$s />',
+                                        esc_attr( $input_type ),
+                                        esc_attr( $id ),
+                                        esc_attr( $key ),
+                                        esc_attr( $value ),
+                                        esc_attr( $class ),
+                                        $attr_html,
+                                        $aria_attribute
+                                );
+                                break;
+                }
 
-		if ( ! empty( $args['description'] ) ) {
-			printf( '<p class="description">%s</p>', esc_html( $args['description'] ) );
-		}
-	}
+                if ( $description ) {
+                        printf( '<p class="description" id="%1$s">%2$s</p>', esc_attr( $description_id ), esc_html( $description ) );
+                }
+        }
 }
 
 if ( ! function_exists( 'pf2_options_sanitize' ) ) {

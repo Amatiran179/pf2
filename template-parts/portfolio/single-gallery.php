@@ -14,6 +14,11 @@ $images = pf2_gallery_get_images( get_the_ID() );
 if ( ! empty( $images ) ) {
         pf2_gallery_render( $images );
 } elseif ( has_post_thumbnail() ) {
+        $fallback_alt = wp_strip_all_tags( get_the_title() );
+        if ( '' === $fallback_alt ) {
+                $fallback_alt = wp_strip_all_tags( __( 'Gallery image', 'pf2' ) );
+        }
+
         echo '<figure class="pf2-gallery__fallback">';
         echo wp_kses_post(
                 get_the_post_thumbnail(
@@ -23,6 +28,7 @@ if ( ! empty( $images ) ) {
                                 'loading'  => 'lazy',
                                 'decoding' => 'async',
                                 'class'    => 'pf2-gallery__fallback-image',
+                                'alt'      => $fallback_alt,
                         )
                 )
         );

@@ -107,13 +107,13 @@ if ( count( $breadcrumbs ) < 2 ) {
             $label   = is_string( $crumb['label'] ) ? $crumb['label'] : '';
             $url     = isset( $crumb['url'] ) ? $crumb['url'] : '';
             ?>
-            <li class="pf2-breadcrumbs__item">
+            <li class="pf2-breadcrumbs__item"<?php echo $is_last ? ' aria-current="page"' : ''; ?>>
                 <?php if ( ! $is_last && ! empty( $url ) ) : ?>
                     <a class="pf2-breadcrumbs__link" href="<?php echo esc_url( $url ); ?>">
                         <?php echo esc_html( $label ); ?>
                     </a>
                 <?php else : ?>
-                    <span class="pf2-breadcrumbs__current"<?php echo $is_last ? ' aria-current="page"' : ''; ?>>
+                    <span class="pf2-breadcrumbs__current">
                         <?php echo esc_html( $label ); ?>
                     </span>
                 <?php endif; ?>
