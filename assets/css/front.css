@@ -196,6 +196,90 @@ img {
   height: auto;
 }
 
+.pf2-gallery {
+  position: relative;
+  margin-block: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.pf2-gallery .swiper {
+  --pf2-gap: 8px;
+  overflow: hidden;
+  border-radius: var(--pf2-radius-lg, 20px);
+  background: #0f172a10;
+}
+
+.pf2-gallery .swiper-wrapper {
+  align-items: stretch;
+}
+
+.pf2-gallery .swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+.pf2-gallery .swiper-slide a {
+  display: block;
+  width: 100%;
+}
+
+.pf2-gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  max-height: min(70vh, 720px);
+  transition: transform 0.35s ease;
+}
+
+.pf2-gallery img.is-visible {
+  transform: translateZ(0);
+}
+
+.pf2-gallery .swiper-button-prev,
+.pf2-gallery .swiper-button-next {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.55);
+  color: #fff;
+  backdrop-filter: blur(2px);
+}
+
+.pf2-gallery .swiper-button-prev:focus-visible,
+.pf2-gallery .swiper-button-next:focus-visible {
+  outline: 2px solid var(--pf2-color-accent);
+  outline-offset: 2px;
+}
+
+.pf2-gallery .swiper-pagination {
+  bottom: clamp(10px, 3vw, 22px) !important;
+}
+
+.pf2-gallery .swiper-pagination-bullet {
+  background: rgba(15, 23, 42, 0.4);
+  opacity: 1;
+}
+
+.pf2-gallery .swiper-pagination-bullet-active {
+  background: var(--pf2-color-accent, #0ea5e9);
+}
+
+.pf2-gallery__fallback,
+.pf2-gallery__empty {
+  margin: 0;
+  text-align: center;
+  padding: clamp(1rem, 3vw, 1.75rem);
+  background: rgba(148, 163, 184, 0.12);
+  border-radius: var(--pf2-radius-lg, 20px);
+}
+
+.pf2-gallery__fallback img {
+  max-height: min(70vh, 720px);
+  object-fit: contain;
+}
+
 @media (max-width: 768px) {
   .pf2-card__header,
   .pf2-card__body,
