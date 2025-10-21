@@ -1,0 +1,1013 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: pf2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-21 07:44:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: pf2-make-pot\n"
+
+#: inc/templates/parts/breadcrumbs.php:68 inc/templates/parts/breadcrumbs.php:83
+msgid "(Tanpa judul)"
+msgstr ""
+
+#: inc/admin/dashboard.php:79
+msgid "30 days"
+msgstr ""
+
+#: inc/admin/dashboard.php:75
+msgid "7 days"
+msgstr ""
+
+#: inc/admin/settings-ui.php:123
+msgid "AI API Key"
+msgstr ""
+
+#: inc/rest/ai-content.php:145
+msgid "AI provider failed to generate content."
+msgstr ""
+
+#: inc/admin/exporter.php:22
+msgid "Access denied"
+msgstr ""
+
+#: inc/admin/dashboard.php:126
+msgid "Activity"
+msgstr ""
+
+#: inc/admin/dashboard.php:37
+msgid "All data"
+msgstr ""
+
+#: template-parts/footer/footer-default.php:14
+msgid "All rights reserved."
+msgstr ""
+
+#: inc/cpt/register-team.php:26
+msgid "Anggota Baru"
+msgstr ""
+
+#: inc/cpt/register-team.php:31
+msgid "Anggota Tim Induk:"
+msgstr ""
+
+#: inc/admin/dashboard.php:62
+msgid "Apply"
+msgstr ""
+
+#: inc/cpt/register-service.php:38
+msgid "Arsip Layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:38
+msgid "Arsip Portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:38
+msgid "Arsip Produk"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:38
+msgid "Arsip Testimoni"
+msgstr ""
+
+#: inc/cpt/register-team.php:38
+msgid "Arsip Tim"
+msgstr ""
+
+#: inc/cpt/register-team.php:35
+msgid "Atur foto anggota"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:35
+msgid "Atur foto testimoni"
+msgstr ""
+
+#: inc/cpt/register-service.php:35
+msgid "Atur gambar layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:35
+msgid "Atur gambar portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:35
+msgid "Atur gambar produk"
+msgstr ""
+
+#: inc/admin/settings-ui.php:99
+msgid "Branding"
+msgstr ""
+
+#: inc/templates/parts/breadcrumbs.php:102
+msgid "Breadcrumb"
+msgstr ""
+
+#: inc/helpers/cta.php:46 inc/templates/cta/modal.php:19
+msgid "Buka Konsultasi"
+msgstr ""
+
+#: inc/templates/parts/card-product.php:18
+msgid "Buka detail %s"
+msgstr ""
+
+#: inc/templates/parts/card-portfolio.php:18
+msgid "Buka portofolio %s"
+msgstr ""
+
+#: inc/admin/settings-ui.php:67
+msgid "CTA Enabled"
+msgstr ""
+
+#: inc/admin/dashboard.php:67
+msgid "CTA clicks (selected range)"
+msgstr ""
+
+#: inc/admin/settings-ui.php:57
+msgid "CTA"
+msgstr ""
+
+#: inc/cpt/register-team.php:30
+msgid "Cari Anggota Tim"
+msgstr ""
+
+#: inc/cpt/register-product.php:68
+msgid "Cari Kategori Produk"
+msgstr ""
+
+#: inc/cpt/register-service.php:30
+msgid "Cari Layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:30
+msgid "Cari Portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:30
+msgid "Cari Produk"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:30
+msgid "Cari Testimoni"
+msgstr ""
+
+#: inc/admin/dashboard.php:125 inc/admin/dashboard.php:90
+msgid "Clicks"
+msgstr ""
+
+#: inc/admin/settings-ui.php:120
+msgid "Connect external services and structured data output."
+msgstr ""
+
+#: inc/admin/settings-ui.php:82
+msgid "Customize hero defaults used across landing pages."
+msgstr ""
+
+#: inc/cpt/register-team.php:43
+msgid "Daftar anggota tim"
+msgstr ""
+
+#: inc/cpt/register-service.php:43
+msgid "Daftar layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:43
+msgid "Daftar portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:43
+msgid "Daftar produk"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:43
+msgid "Daftar testimoni"
+msgstr ""
+
+#: inc/admin/menu.php:33 inc/admin/menu.php:34
+msgid "Dashboard"
+msgstr ""
+
+#: inc/admin/dashboard.php:124
+msgid "Date"
+msgstr ""
+
+#: inc/admin/settings-ui.php:61
+msgid "Default CTA Text"
+msgstr ""
+
+#: inc/admin/settings-ui.php:58
+msgid "Default call-to-action messaging and toggles."
+msgstr ""
+
+#: inc/templates/parts/card-portfolio.php:14
+msgid "Detail Portofolio"
+msgstr ""
+
+#: inc/templates/parts/card-product.php:14
+msgid "Detail Produk"
+msgstr ""
+
+#: inc/admin/settings-ui.php:114
+msgid "Direct URL to the favicon image."
+msgstr ""
+
+#: inc/admin/settings-ui.php:107
+msgid "Direct URL to the primary brand logo."
+msgstr ""
+
+#: inc/admin/settings-ui.php:70
+msgid "Disable to hide all theme-managed CTAs."
+msgstr ""
+
+#: front-page.php:24
+msgid "Discover our most recent highlights."
+msgstr ""
+
+#: inc/admin/dashboard.php:152
+msgid "Download the captured events as CSV or JSON for archival analysis."
+msgstr ""
+
+#: inc/cpt/register-team.php:27
+msgid "Edit Anggota Tim"
+msgstr ""
+
+#: inc/cpt/register-product.php:72
+msgid "Edit Kategori Produk"
+msgstr ""
+
+#: inc/cpt/register-service.php:27
+msgid "Edit Layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:27
+msgid "Edit Portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:27
+msgid "Edit Produk"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:27
+msgid "Edit Testimoni"
+msgstr ""
+
+#: inc/admin/settings-ui.php:130
+msgid "Enable Schema Output"
+msgstr ""
+
+#: inc/admin/dashboard.php:159
+msgid "Export CSV"
+msgstr ""
+
+#: inc/admin/dashboard.php:166
+msgid "Export JSON"
+msgstr ""
+
+#: inc/admin/dashboard.php:151
+msgid "Export"
+msgstr ""
+
+#: inc/admin/settings-ui.php:110
+msgid "Favicon URL"
+msgstr ""
+
+#: inc/admin/settings-ui.php:73
+msgid "Floating Button Enabled"
+msgstr ""
+
+#: inc/core/setup.php:36
+msgid "Footer Menu"
+msgstr ""
+
+#: inc/admin/settings-ui.php:46
+msgid "Footer Note"
+msgstr ""
+
+#: inc/cpt/register-team.php:34
+msgid "Foto Anggota"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:34
+msgid "Foto Testimoni"
+msgstr ""
+
+#: single-pf2_portfolio.php:50
+msgid "Galeri portofolio"
+msgstr ""
+
+#: single-pf2_product.php:50
+msgid "Galeri produk"
+msgstr ""
+
+#: inc/helpers/gallery.php:201 template-parts/portfolio/single-gallery.php:19 template-parts/product/single-gallery.php:19
+msgid "Gallery image"
+msgstr ""
+
+#: inc/cpt/register-service.php:34
+msgid "Gambar Layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:34
+msgid "Gambar Portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:34
+msgid "Gambar Produk"
+msgstr ""
+
+#: inc/admin/settings-ui.php:23
+msgid "General"
+msgstr ""
+
+#: inc/admin/settings-ui.php:24
+msgid "Global defaults for brand accent, contact, and footer copy."
+msgstr ""
+
+#: inc/cpt/register-team.php:37
+msgid "Gunakan sebagai foto anggota"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:37
+msgid "Gunakan sebagai foto testimoni"
+msgstr ""
+
+#: inc/cpt/register-service.php:37
+msgid "Gunakan sebagai gambar layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:37
+msgid "Gunakan sebagai gambar portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:37
+msgid "Gunakan sebagai gambar produk"
+msgstr ""
+
+#: inc/cpt/register-team.php:36
+msgid "Hapus foto anggota"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:36
+msgid "Hapus foto testimoni"
+msgstr ""
+
+#: inc/cpt/register-service.php:36
+msgid "Hapus gambar layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:36
+msgid "Hapus gambar portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:36
+msgid "Hapus gambar produk"
+msgstr ""
+
+#: inc/admin/settings-ui.php:91
+msgid "Hero Subtitle"
+msgstr ""
+
+#: inc/admin/settings-ui.php:85
+msgid "Hero Title"
+msgstr ""
+
+#: inc/admin/settings-ui.php:81
+msgid "Hero"
+msgstr ""
+
+#: inc/admin/settings-ui.php:32
+msgid "Hex color value used for theme accents (e.g. #0ea5e9)."
+msgstr ""
+
+#: inc/templates/parts/breadcrumbs.php:14
+msgid "Home"
+msgstr ""
+
+#: template-parts/portfolio/loop-item.php:19
+msgid "Image coming soon"
+msgstr ""
+
+#: inc/admin/settings-ui.php:119
+msgid "Integrations"
+msgstr ""
+
+#: inc/rest/ai-content.php:161
+msgid "Invalid AI provider response."
+msgstr ""
+
+#: inc/rest/metrics.php:494
+msgid "Invalid payload."
+msgstr ""
+
+#: inc/rest/metrics.php:488
+msgid "Invalid submission nonce."
+msgstr ""
+
+#: inc/cpt/register-product.php:71
+msgid "Kategori Produk Induk:"
+msgstr ""
+
+#: inc/cpt/register-product.php:70
+msgid "Kategori Produk Induk"
+msgstr ""
+
+#: inc/cpt/register-product.php:76
+msgid "Kategori Produk"
+msgstr ""
+
+#: inc/cpt/register-product.php:66
+msgctxt "taxonomy general name"
+msgid "Kategori Produk"
+msgstr ""
+
+#: inc/cpt/register-product.php:67
+msgctxt "taxonomy singular name"
+msgid "Kategori Produk"
+msgstr ""
+
+#: inc/helpers/cta.php:21
+msgid "Konsultasi via WhatsApp"
+msgstr ""
+
+#: inc/admin/dashboard.php:36
+msgid "Last 30 days"
+msgstr ""
+
+#: inc/admin/dashboard.php:35
+msgid "Last 7 days"
+msgstr ""
+
+#: front-page.php:21
+msgid "Latest Portfolio"
+msgstr ""
+
+#: inc/cpt/register-service.php:26
+msgid "Layanan Baru"
+msgstr ""
+
+#: inc/cpt/register-service.php:31
+msgid "Layanan Induk:"
+msgstr ""
+
+#: inc/cpt/register-service.php:23
+msgctxt "Add New on Toolbar"
+msgid "Layanan"
+msgstr ""
+
+#: inc/cpt/register-service.php:22
+msgctxt "Admin Menu text"
+msgid "Layanan"
+msgstr ""
+
+#: inc/cpt/register-service.php:20
+msgctxt "Post type general name"
+msgid "Layanan"
+msgstr ""
+
+#: inc/cpt/register-service.php:21
+msgctxt "Post type singular name"
+msgid "Layanan"
+msgstr ""
+
+#: inc/cpt/register-team.php:28
+msgid "Lihat Anggota Tim"
+msgstr ""
+
+#: inc/cpt/register-service.php:28
+msgid "Lihat Layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:28
+msgid "Lihat Portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:28
+msgid "Lihat Produk"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:28
+msgid "Lihat Testimoni"
+msgstr ""
+
+#: inc/admin/settings-ui.php:103
+msgid "Logo URL"
+msgstr ""
+
+#: inc/admin/settings-ui.php:100
+msgid "Manage brand imagery surfaced within theme templates."
+msgstr ""
+
+#: inc/cpt/register-team.php:39
+msgid "Masukkan ke anggota tim"
+msgstr ""
+
+#: inc/cpt/register-service.php:39
+msgid "Masukkan ke layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:39
+msgid "Masukkan ke portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:39
+msgid "Masukkan ke produk"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:39
+msgid "Masukkan ke testimoni"
+msgstr ""
+
+#: inc/admin/dashboard.php:50
+msgid "Monitor CTA engagement, review top performing content, and export historical data."
+msgstr ""
+
+#: inc/cpt/register-product.php:75
+msgid "Nama Kategori Produk Baru"
+msgstr ""
+
+#: archive-pf2_portfolio.php:44 archive-pf2_product.php:44
+msgid "Navigasi arsip"
+msgstr ""
+
+#: inc/cpt/register-team.php:42
+msgid "Navigasi daftar anggota tim"
+msgstr ""
+
+#: inc/cpt/register-service.php:42
+msgid "Navigasi daftar layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:42
+msgid "Navigasi daftar portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:42
+msgid "Navigasi daftar produk"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:42
+msgid "Navigasi daftar testimoni"
+msgstr ""
+
+#: inc/helpers/gallery.php:211
+msgid "Next slide"
+msgstr ""
+
+#: inc/admin/dashboard.php:96
+msgid "No CTA clicks recorded for this range."
+msgstr ""
+
+#: index.php:50
+msgid "No content found."
+msgstr ""
+
+#: inc/admin/dashboard.php:132
+msgid "No events captured for the selected range."
+msgstr ""
+
+#: front-page.php:47
+msgid "No portfolio yet."
+msgstr ""
+
+#: inc/admin/dashboard.php:110
+msgid "Not captured"
+msgstr ""
+
+#: inc/admin/settings-ui.php:49
+msgid "Optional footer text for copyright or compliance notices."
+msgstr ""
+
+#: inc/admin/settings-ui.php:133
+msgid "Override automatic detection and force schema output."
+msgstr ""
+
+#: inc/admin/dashboard.php:88
+msgid "Page"
+msgstr ""
+
+#: inc/cpt/register-product.php:73
+msgid "Perbarui Kategori Produk"
+msgstr ""
+
+#: inc/admin/settings-ui.php:39
+msgid "Phone (WhatsApp)"
+msgstr ""
+
+#: inc/rest/ai-content.php:94
+msgid "Please wait before requesting new AI content."
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:26
+msgid "Portofolio Baru"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:31
+msgid "Portofolio Induk:"
+msgstr ""
+
+#: archive-pf2_portfolio.php:50
+msgid "Portofolio belum tersedia saat ini."
+msgstr ""
+
+#: single-pf2_portfolio.php:67
+msgid "Portofolio lainnya"
+msgstr ""
+
+#: inc/templates/parts/breadcrumbs.php:21
+msgid "Portofolio"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:23
+msgctxt "Add New on Toolbar"
+msgid "Portofolio"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:22
+msgctxt "Admin Menu text"
+msgid "Portofolio"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:20
+msgctxt "Post type general name"
+msgid "Portofolio"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:21
+msgctxt "Post type singular name"
+msgid "Portofolio"
+msgstr ""
+
+#: template-parts/product/loop-item.php:19
+msgid "Preview coming soon"
+msgstr ""
+
+#: inc/helpers/gallery.php:210
+msgid "Previous slide"
+msgstr ""
+
+#: inc/core/setup.php:35
+msgid "Primary Menu"
+msgstr ""
+
+#: inc/admin/settings-ui.php:43
+msgid "Primary WhatsApp number for CTAs. Include country code."
+msgstr ""
+
+#: inc/cpt/register-product.php:26
+msgid "Produk Baru"
+msgstr ""
+
+#: inc/cpt/register-product.php:31
+msgid "Produk Induk:"
+msgstr ""
+
+#: archive-pf2_product.php:50
+msgid "Produk belum tersedia saat ini."
+msgstr ""
+
+#: single-pf2_product.php:82
+msgid "Produk terkait"
+msgstr ""
+
+#: inc/templates/parts/breadcrumbs.php:20
+msgid "Produk"
+msgstr ""
+
+#: inc/cpt/register-product.php:23
+msgctxt "Add New on Toolbar"
+msgid "Produk"
+msgstr ""
+
+#: inc/cpt/register-product.php:22
+msgctxt "Admin Menu text"
+msgid "Produk"
+msgstr ""
+
+#: inc/cpt/register-product.php:20
+msgctxt "Post type general name"
+msgid "Produk"
+msgstr ""
+
+#: inc/cpt/register-product.php:21
+msgctxt "Post type singular name"
+msgid "Produk"
+msgstr ""
+
+#: inc/admin/dashboard.php:48
+msgid "PutraFiber Analytics Dashboard"
+msgstr ""
+
+#: inc/admin/menu.php:22
+msgid "PutraFiber Dashboard"
+msgstr ""
+
+#: inc/admin/settings-ui.php:356
+msgid "PutraFiber Settings"
+msgstr ""
+
+#: inc/admin/menu.php:23
+msgid "PutraFiber"
+msgstr ""
+
+#: inc/templates/cta/modal.php:86
+msgid "Quick Contact"
+msgstr ""
+
+#: index.php:37
+msgid "Read more"
+msgstr ""
+
+#: inc/cpt/register-team.php:41
+msgid "Saring daftar anggota tim"
+msgstr ""
+
+#: inc/cpt/register-service.php:41
+msgid "Saring daftar layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:41
+msgid "Saring daftar portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:41
+msgid "Saring daftar produk"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:41
+msgid "Saring daftar testimoni"
+msgstr ""
+
+#: inc/admin/settings-ui.php:393
+msgid "Save Changes"
+msgstr ""
+
+#: archive-pf2_portfolio.php:42 archive-pf2_product.php:42
+msgid "Sebelumnya"
+msgstr ""
+
+#: archive-pf2_portfolio.php:43 archive-pf2_product.php:43
+msgid "Selanjutnya"
+msgstr ""
+
+#: inc/admin/dashboard.php:55
+msgid "Select range:"
+msgstr ""
+
+#: inc/cpt/register-team.php:29
+msgid "Semua Anggota Tim"
+msgstr ""
+
+#: inc/cpt/register-product.php:69
+msgid "Semua Kategori Produk"
+msgstr ""
+
+#: inc/cpt/register-service.php:29
+msgid "Semua Layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:29
+msgid "Semua Portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:29
+msgid "Semua Produk"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:29
+msgid "Semua Testimoni"
+msgstr ""
+
+#: inc/admin/menu.php:42 inc/admin/menu.php:43
+msgid "Settings"
+msgstr ""
+
+#: inc/admin/settings-ui.php:27
+msgid "Site Accent Color"
+msgstr ""
+
+#: inc/admin/settings-ui.php:127
+msgid "Stored securely for future AI integrations (Batch 11)."
+msgstr ""
+
+#: inc/cpt/register-team.php:25
+msgid "Tambah Anggota Baru"
+msgstr ""
+
+#: inc/cpt/register-team.php:24
+msgid "Tambah Anggota"
+msgstr ""
+
+#: inc/cpt/register-product.php:74
+msgid "Tambah Kategori Produk Baru"
+msgstr ""
+
+#: inc/cpt/register-service.php:25
+msgid "Tambah Layanan Baru"
+msgstr ""
+
+#: inc/cpt/register-service.php:24
+msgid "Tambah Layanan"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:25
+msgid "Tambah Portofolio Baru"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:24
+msgid "Tambah Portofolio"
+msgstr ""
+
+#: inc/cpt/register-product.php:25
+msgid "Tambah Produk Baru"
+msgstr ""
+
+#: inc/cpt/register-product.php:24
+msgid "Tambah Produk"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:25
+msgid "Tambah Testimoni Baru"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:24
+msgid "Tambah Testimoni"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:26
+msgid "Testimoni Baru"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:31
+msgid "Testimoni Induk:"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:23
+msgctxt "Add New on Toolbar"
+msgid "Testimoni"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:22
+msgctxt "Admin Menu text"
+msgid "Testimoni"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:20
+msgctxt "Post type general name"
+msgid "Testimoni"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:21
+msgctxt "Post type singular name"
+msgid "Testimoni"
+msgstr ""
+
+#: inc/cpt/register-team.php:33
+msgid "Tidak ada anggota tim di tong sampah."
+msgstr ""
+
+#: inc/cpt/register-team.php:32
+msgid "Tidak ada anggota tim ditemukan."
+msgstr ""
+
+#: template-parts/portfolio/single-gallery.php:37 template-parts/product/single-gallery.php:37
+msgid "Tidak ada gambar yang dapat ditampilkan saat ini."
+msgstr ""
+
+#: inc/cpt/register-service.php:33
+msgid "Tidak ada layanan di tong sampah."
+msgstr ""
+
+#: inc/cpt/register-service.php:32
+msgid "Tidak ada layanan ditemukan."
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:33
+msgid "Tidak ada portofolio di tong sampah."
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:32
+msgid "Tidak ada portofolio ditemukan."
+msgstr ""
+
+#: inc/cpt/register-product.php:33
+msgid "Tidak ada produk di tong sampah."
+msgstr ""
+
+#: inc/cpt/register-product.php:32
+msgid "Tidak ada produk ditemukan."
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:33
+msgid "Tidak ada testimoni di tong sampah."
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:32
+msgid "Tidak ada testimoni ditemukan."
+msgstr ""
+
+#: inc/admin/dashboard.php:120
+msgid "Timeline"
+msgstr ""
+
+#: inc/cpt/register-team.php:23
+msgctxt "Add New on Toolbar"
+msgid "Tim"
+msgstr ""
+
+#: inc/cpt/register-team.php:22
+msgctxt "Admin Menu text"
+msgid "Tim"
+msgstr ""
+
+#: inc/cpt/register-team.php:20
+msgctxt "Post type general name"
+msgid "Tim"
+msgstr ""
+
+#: inc/cpt/register-team.php:21
+msgctxt "Post type singular name"
+msgid "Tim"
+msgstr ""
+
+#: inc/admin/dashboard.php:34 inc/admin/dashboard.php:71
+msgid "Today"
+msgstr ""
+
+#: inc/admin/settings-ui.php:76
+msgid "Toggle the floating WhatsApp button on eligible templates."
+msgstr ""
+
+#: inc/rest/metrics.php:504
+msgid "Too many requests. Please slow down."
+msgstr ""
+
+#: inc/admin/dashboard.php:84
+msgid "Top CTA sources"
+msgstr ""
+
+#: inc/rest/ai-content.php:50
+msgid "Topic is required for AI generation."
+msgstr ""
+
+#: inc/templates/cta/floating.php:48
+msgid "Tutup ajakan bertindak"
+msgstr ""
+
+#: inc/templates/cta/modal.php:80
+msgid "Tutup dialog CTA"
+msgstr ""
+
+#: inc/admin/dashboard.php:89
+msgid "URL"
+msgstr ""
+
+#: inc/cpt/register-team.php:40
+msgid "Unggah ke anggota tim ini"
+msgstr ""
+
+#: inc/cpt/register-service.php:40
+msgid "Unggah ke layanan ini"
+msgstr ""
+
+#: inc/cpt/register-portfolio.php:40
+msgid "Unggah ke portofolio ini"
+msgstr ""
+
+#: inc/cpt/register-product.php:40
+msgid "Unggah ke produk ini"
+msgstr ""
+
+#: inc/cpt/register-testimonial.php:40
+msgid "Unggah ke testimoni ini"
+msgstr ""
+
+#: inc/admin/dashboard.php:100 inc/rest/metrics.php:289
+msgid "Unknown"
+msgstr ""
+
+#: inc/rest/metrics.php:500
+msgid "Unsupported metric type."
+msgstr ""
+
+#: inc/templates/cta/modal.php:89
+msgid "Use this dialog to contact us via WhatsApp."
+msgstr ""
+
+#: inc/admin/exporter.php:22
+msgid "You are not allowed to export metrics."
+msgstr ""
+
+#: inc/rest/ai-content.php:81
+msgid "You are not allowed to generate AI content."
+msgstr ""
+
+#: single-pf2_portfolio.php:36 single-pf2_product.php:36
+msgid "oleh %s"
+msgstr ""
+

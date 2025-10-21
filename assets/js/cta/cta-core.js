@@ -108,13 +108,23 @@ const openCtaModal = (id) => {
   activeModalId = id;
   lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
+  if (
+    lastFocusedElement
+    && typeof lastFocusedElement.setAttribute === 'function'
+    && lastFocusedElement.hasAttribute('data-pf2-cta-open')
+  ) {
+    lastFocusedElement.setAttribute('aria-expanded', 'true');
+  }
+
   modal.removeAttribute('hidden');
   modal.setAttribute('aria-hidden', 'false');
   modal.classList.add('is-open');
 
   const dialog = getModalDialog(modal);
   if (dialog) {
-    dialog.focus({ preventScroll: true });
+    const initialFocus = dialog.querySelector('[data-pf2-cta-modal-initial]');
+    const target = initialFocus instanceof HTMLElement ? initialFocus : dialog;
+    target.focus({ preventScroll: true });
   }
 
   document.addEventListener('keydown', handleModalKeydown);
@@ -145,6 +155,14 @@ const closeCtaModal = (id = activeModalId) => {
 
   if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
     lastFocusedElement.focus({ preventScroll: true });
+  }
+
+  if (
+    lastFocusedElement
+    && typeof lastFocusedElement.setAttribute === 'function'
+    && lastFocusedElement.hasAttribute('data-pf2-cta-open')
+  ) {
+    lastFocusedElement.setAttribute('aria-expanded', 'false');
   }
 
   lastFocusedElement = null;

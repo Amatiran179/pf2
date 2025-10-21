@@ -28,8 +28,9 @@ if ( ! function_exists( 'pf2_gallery_prepare_image_data' ) ) {
                 $thumb_image  = wp_get_attachment_image_src( $attachment_id, 'medium' );
                 $srcset       = wp_get_attachment_image_srcset( $attachment_id, 'large' );
                 $sizes        = wp_get_attachment_image_sizes( $attachment_id, 'large' );
-                $alt_text     = get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
-                $fallback_alt = get_the_title( $attachment_id );
+                $alt_text_raw = get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
+                $alt_text     = is_string( $alt_text_raw ) ? wp_strip_all_tags( $alt_text_raw ) : '';
+                $fallback_alt = wp_strip_all_tags( get_the_title( $attachment_id ) );
 
                 if ( ! $large_image ) {
                         return null;
