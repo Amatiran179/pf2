@@ -18,15 +18,32 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return array<string, mixed>
  */
 function pf2_cta_get_defaults() {
+	$text_default  = __( 'Konsultasi via WhatsApp', 'pf2' );
+	$phone_default = '628111111111';
+
+	if ( function_exists( 'pf2_options_get' ) ) {
+		$option_text = (string) pf2_options_get( 'cta_text', $text_default );
+		if ( '' !== $option_text ) {
+			$text_default = $option_text;
+		}
+
+		$option_phone = (string) pf2_options_get( 'phone_wa', '' );
+		if ( '' !== $option_phone ) {
+			$phone_default = $option_phone;
+		}
+	}
+
+	$phone_default = preg_replace( '/[^0-9+]/', '', $phone_default );
+
 	$defaults = array(
-	        'type'        => 'inline',
-	        'text'        => __( 'Konsultasi via WhatsApp', 'pf2' ),
-	        'phone'       => '628111111111',
-	        'icon'        => 'whatsapp',
-	        'class'       => 'pf2-cta pf2-cta--primary',
-	        'context'     => array(),
-	        'post_id'     => 0,
-	        'trigger_text' => __( 'Buka Konsultasi', 'pf2' ),
+		'type'        => 'inline',
+		'text'        => $text_default,
+		'phone'       => $phone_default,
+		'icon'        => 'whatsapp',
+		'class'       => 'pf2-cta pf2-cta--primary',
+		'context'     => array(),
+		'post_id'     => 0,
+		'trigger_text' => __( 'Buka Konsultasi', 'pf2' ),
 	);
 
 	/**
@@ -37,6 +54,7 @@ function pf2_cta_get_defaults() {
 	return apply_filters( 'pf2_cta_defaults', $defaults );
 }
 
+
 /**
  * Determine whether a CTA should render for the provided context.
  *
@@ -45,6 +63,18 @@ function pf2_cta_get_defaults() {
  */
 function pf2_cta_should_render( $context = array() ) {
 	$should_render = true;
+
+	if ( function_exists( 'pf2_options_get' ) ) {
+		$global_enabled = (int) pf2_options_get( 'cta_enabled', 1 );
+		if ( ! $global_enabled ) {
+			$should_render = false;
+		} elseif ( isset( $context['type'] ) && 'floating' === $context['type'] ) {
+			$floating_enabled = (int) pf2_options_get( 'cta_floating_enabled', 1 );
+			if ( ! $floating_enabled ) {
+				$should_render = false;
+			}
+		}
+	}
 
 	if ( isset( $context['post_id'] ) && $context['post_id'] ) {
 	        $post_status = get_post_status( (int) $context['post_id'] );
@@ -217,35 +247,40 @@ add_shortcode( 'pf2_cta', 'pf2_cta_shortcode' );
  * @return string
  */
 function pf2_cta_append_inline_to_content( $content ) {
+	if ( function_exists( 'pf2_options_get' ) && ! (int) pf2_options_get( 'cta_enabled', 1 ) ) {
+		return $content;
+	}
+
 	if ( ! is_singular( array( 'pf2_product', 'pf2_portfolio' ) ) ) {
-	        return $content;
+		return $content;
 	}
 
 	if ( ! in_the_loop() || ! is_main_query() ) {
-	        return $content;
+		return $content;
 	}
 
 	$post_type = get_post_type();
 
 	if ( ! apply_filters( 'pf2_cta_inline_enabled', true, $post_type ) ) {
-	        return $content;
+		return $content;
 	}
 
 	$cta_markup = pf2_cta_render(
-	        array(
-	                'type'    => 'inline',
-	                'post_id' => get_the_ID(),
-	                'context' => array(
-	                        'placement' => 'the_content',
-	                        'post_type' => $post_type,
-	                ),
-	        )
+		array(
+			'type'    => 'inline',
+			'post_id' => get_the_ID(),
+			'context' => array(
+				'placement' => 'the_content',
+				'post_type' => $post_type,
+			),
+		)
 	);
 
 	if ( $cta_markup ) {
-	        $content .= $cta_markup;
+		$content .= $cta_markup;
 	}
 
 	return $content;
 }
+
 add_filter( 'the_content', 'pf2_cta_append_inline_to_content', 15 );

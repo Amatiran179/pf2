@@ -151,6 +151,20 @@ require_once get_template_directory() . '/inc/schema/tourist-attraction.php';
 require_once get_template_directory() . '/inc/schema/organization.php';
 require_once get_template_directory() . '/inc/schema/local-business.php';
 
+add_filter(
+	'pf2_schema_enabled',
+	function ( $enabled ) {
+		if ( function_exists( 'pf2_options_get' ) ) {
+			$option = (int) pf2_options_get( 'schema_enabled', 1 );
+			if ( ! $option ) {
+				return false;
+			}
+		}
+
+		return (bool) $enabled;
+	}
+);
+
 if ( ! function_exists( 'pf2_schema_is_enabled' ) ) {
         /**
          * Determine whether the schema engine should run.
