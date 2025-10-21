@@ -271,9 +271,15 @@ if ( ! function_exists( 'pf2_options_sanitize' ) ) {
 	 * @return array<string, mixed>
 	 */
 	function pf2_options_sanitize( $input ) {
-		$defaults  = pf2_options_defaults();
-		$schema    = pf2_admin_get_settings_schema();
-		$sanitized = pf2_options_get_all();
+                $defaults = pf2_options_defaults();
+                $schema   = pf2_admin_get_settings_schema();
+                $current  = get_option( 'pf2_options', array() );
+
+                if ( ! is_array( $current ) ) {
+                        $current = array();
+                }
+
+                $sanitized = array_merge( $defaults, $current );
 
 		if ( ! is_array( $input ) ) {
 			$input = array();
@@ -293,69 +299,52 @@ if ( ! function_exists( 'pf2_options_sanitize' ) ) {
 			return $sanitized;
 		}
 
-		foreach ( $schema[ $active_tab ]['fields'] as $key => $field ) {
-			$mode      = isset( $field['sanitize'] ) ? $field['sanitize'] : 'string';
-			$default   = isset( $defaults[ $key ] ) ? $defaults[ $key ] : '';
-			$has_value = array_key_exists( $key, $input );
+                foreach ( $schema[ $active_tab ]['fields'] as $key => $field ) {
+                        if ( ! array_key_exists( $key, $input ) ) {
+                                continue;
+                        }
 
-			switch ( $mode ) {
-                               case 'bool':
-                                       if ( ! $has_value ) {
-                                               break;
-                                       }
+                        $mode    = isset( $field['sanitize'] ) ? $field['sanitize'] : 'string';
+                        $default = isset( $defaults[ $key ] ) ? $defaults[ $key ] : '';
 
-                                       $raw = wp_unslash( $input[ $key ] );
+                        switch ( $mode ) {
+                                case 'bool':
+                                        $raw = wp_unslash( $input[ $key ] );
 
-                                       if ( is_array( $raw ) ) {
-                                               $raw = end( $raw );
-                                       }
+                                        if ( is_array( $raw ) ) {
+                                                $raw = end( $raw );
+                                        }
 
-                                       $sanitized[ $key ] = filter_var( $raw, FILTER_VALIDATE_BOOLEAN ) ? 1 : 0;
-                                       break;
-			        case 'url':
-			                if ( ! $has_value ) {
-			                        break;
-			                }
+                                        $sanitized[ $key ] = filter_var( $raw, FILTER_VALIDATE_BOOLEAN ) ? 1 : 0;
+                                        break;
+                                case 'url':
+                                        $value = trim( (string) wp_unslash( $input[ $key ] ) );
+                                        if ( '' !== $value ) {
+                                                $sanitized[ $key ] = esc_url_raw( $value );
+                                        } else {
+                                                $sanitized[ $key ] = '';
+                                        }
+                                        break;
+                                case 'color':
+                                        $value = wp_unslash( $input[ $key ] );
+                                        $value = is_string( $value ) ? trim( $value ) : '';
+                                        if ( is_string( $value ) && preg_match( '/^#([A-Fa-f0-9]{3}){1,2}$/', $value ) ) {
+                                                $sanitized[ $key ] = strtolower( $value );
+                                        } else {
+                                                $sanitized[ $key ] = $default;
+                                        }
+                                        break;
+                                case 'textarea':
+                                        $sanitized[ $key ] = sanitize_textarea_field( wp_unslash( $input[ $key ] ) );
+                                        break;
+                                default:
+                                        $sanitized[ $key ] = sanitize_text_field( wp_unslash( $input[ $key ] ) );
+                                        break;
+                        }
+                }
 
-			                $value = trim( (string) wp_unslash( $input[ $key ] ) );
-			                if ( '' !== $value ) {
-			                        $sanitized[ $key ] = esc_url_raw( $value );
-			                } else {
-			                        $sanitized[ $key ] = '';
-			                }
-			                break;
-			        case 'color':
-			                if ( ! $has_value ) {
-			                        break;
-			                }
-
-			                $value = wp_unslash( $input[ $key ] );
-			                $value = is_string( $value ) ? trim( $value ) : '';
-			                if ( is_string( $value ) && preg_match( '/^#([A-Fa-f0-9]{3}){1,2}$/', $value ) ) {
-			                        $sanitized[ $key ] = strtolower( $value );
-			                } else {
-			                        $sanitized[ $key ] = $default;
-			                }
-			                break;
-			        case 'textarea':
-			                if ( ! $has_value ) {
-			                        break;
-			                }
-
-			                $sanitized[ $key ] = sanitize_textarea_field( wp_unslash( $input[ $key ] ) );
-			                break;
-			        default:
-			                if ( ! $has_value ) {
-			                        break;
-			                }
-
-			                $sanitized[ $key ] = sanitize_text_field( wp_unslash( $input[ $key ] ) );
-			                break;
-			}
-		}
-
-		return $sanitized;
-	}
+                return $sanitized;
+        }
 }
 
 if ( ! function_exists( 'pf2_admin_render_settings_page' ) ) {
