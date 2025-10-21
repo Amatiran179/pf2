@@ -110,9 +110,10 @@ if ( ! function_exists( 'pf2_enqueue_front_assets' ) ) {
 			wp_enqueue_style( 'pf2-front', pf2_get_asset_uri( $style_path ), array(), $version );
 		}
 
-		if ( file_exists( pf2_get_asset_path( $script_path ) ) ) {
-			wp_enqueue_script( 'pf2-front', pf2_get_asset_uri( $script_path ), array(), $version, true );
-		}
+               if ( file_exists( pf2_get_asset_path( $script_path ) ) ) {
+                       wp_enqueue_script( 'pf2-front', pf2_get_asset_uri( $script_path ), array(), $version, true );
+                       wp_script_add_data( 'pf2-front', 'type', 'module' );
+               }
 	}
 }
 add_action( 'wp_enqueue_scripts', 'pf2_enqueue_front_assets' );
@@ -147,9 +148,10 @@ if ( ! function_exists( 'pf2_enqueue_admin_assets' ) ) {
 			wp_enqueue_style( 'pf2-admin', pf2_get_asset_uri( $style_path ), array(), $version );
 		}
 
-		if ( file_exists( pf2_get_asset_path( $script_path ) ) ) {
-			wp_enqueue_script( 'pf2-admin', pf2_get_asset_uri( $script_path ), array(), $version, true );
-		}
+               if ( file_exists( pf2_get_asset_path( $script_path ) ) ) {
+                       wp_enqueue_script( 'pf2-admin', pf2_get_asset_uri( $script_path ), array(), $version, true );
+                       wp_script_add_data( 'pf2-admin', 'type', 'module' );
+               }
 	}
 }
 add_action( 'admin_enqueue_scripts', 'pf2_enqueue_admin_assets' );
