@@ -221,14 +221,15 @@ if ( ! function_exists( 'pf2_admin_render_field' ) ) {
 		}
 
 		switch ( $control ) {
-			case 'checkbox':
-				printf(
-					'<input type="checkbox" id="%1$s" name="pf2_options[%2$s]" value="1" %3$s />',
-					esc_attr( $id ),
-					esc_attr( $key ),
-					checked( (int) $value, 1, false )
-				);
-				break;
+                       case 'checkbox':
+                               printf(
+                                       '<input type="hidden" name="pf2_options[%1$s]" value="0" />' .
+                                       '<input type="checkbox" id="%2$s" name="pf2_options[%1$s]" value="1" %3$s />',
+                                       esc_attr( $key ),
+                                       esc_attr( $id ),
+                                       checked( (int) $value, 1, false )
+                               );
+                               break;
 			case 'textarea':
 				$rows = isset( $attributes['rows'] ) ? (int) $attributes['rows'] : 4;
 				printf(
@@ -298,9 +299,19 @@ if ( ! function_exists( 'pf2_options_sanitize' ) ) {
 			$has_value = array_key_exists( $key, $input );
 
 			switch ( $mode ) {
-			        case 'bool':
-			                $sanitized[ $key ] = ( $has_value && ! empty( $input[ $key ] ) ) ? 1 : 0;
-			                break;
+                               case 'bool':
+                                       if ( ! $has_value ) {
+                                               break;
+                                       }
+
+                                       $raw = wp_unslash( $input[ $key ] );
+
+                                       if ( is_array( $raw ) ) {
+                                               $raw = end( $raw );
+                                       }
+
+                                       $sanitized[ $key ] = filter_var( $raw, FILTER_VALIDATE_BOOLEAN ) ? 1 : 0;
+                                       break;
 			        case 'url':
 			                if ( ! $has_value ) {
 			                        break;
