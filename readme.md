@@ -1,14 +1,3 @@
-Siap. Di bawah ini saya tuliskan **README.md versi lengkap** untuk repo `pf2`—sudah termasuk:
-
-* Deskripsi & Visi (enterprise-grade, SEO/CTA/Performance).
-* **Tree struktur lengkap** (folder & file kunci, modul per area).
-* **Sistem batch** yang berkesinambungan (Batch 0 → 14) + *perintah* real (Git, NPM/Vite, WP-CLI) + *deliverables* & *acceptance criteria* per batch.
-* Pedoman kontribusi, standar koding, CI/CD, dan rilis.
-
-Anda tinggal **salin seluruh isi** ke `README.md` di root repo `pf2`.
-
----
-
 # 🧠 PUTRAFIBER AI THEME v2 (`pf2`)
 
 **Blueprint WordPress Enterprise – SEO • CTA • Performance • AI-Ready**
