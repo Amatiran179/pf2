@@ -12,10 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 add_action(
-	'init',
-	function () {
-		// Reserved for custom post type registration in Batch 3.
-	}
+        'init',
+        function () {
+                require_once get_template_directory() . '/inc/cpt/loader.php';
+        }
 );
 
 add_filter(
