@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 ?>
-<main id="primary" class="site-main site-main--single-product">
+<main id="content" class="site-main site-main--single-product" role="main">
     <?php get_template_part( 'inc/templates/parts/breadcrumbs' ); ?>
 
     <?php

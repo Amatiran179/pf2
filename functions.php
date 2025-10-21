@@ -34,3 +34,8 @@ if ( is_admin() ) {
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
         require_once get_template_directory() . '/wp-cli-commands.php';
 }
+
+$pf2_std = get_template_directory() . '/inc/core/theme-standard.php';
+if ( file_exists( $pf2_std ) ) {
+        require_once $pf2_std;
+}

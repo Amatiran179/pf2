@@ -14,7 +14,7 @@ get_header();
 $post_type_object     = get_post_type_object( 'pf2_portfolio' );
 $archive_description = $post_type_object && ! empty( $post_type_object->description ) ? $post_type_object->description : '';
 ?>
-<main id="primary" class="site-main site-main--archive-portfolio">
+<main id="content" class="site-main site-main--archive-portfolio" role="main">
     <?php get_template_part( 'inc/templates/parts/breadcrumbs' ); ?>
 
     <header class="pf2-archive__header">
