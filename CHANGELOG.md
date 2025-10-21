@@ -4,8 +4,10 @@
 
 ### Fixed
 
-* REST metrics endpoint now accepts standard `X-WP-Nonce` headers and trims referrer payloads to prevent false `401` errors. 
+* REST metrics endpoint now accepts standard `X-WP-Nonce` headers and trims referrer payloads to prevent false `401` errors.
 * CTA metrics rate limiting enforces a filterable 3-second window to reduce spam submissions.
+* Added the missing `footer.php` wrapper so WordPress core no longer emits the deprecated "Theme without footer" warning.
+* Added a core-compliant `header.php` wrapper and primary navigation template so the theme meets WordPress header requirements without deprecation notices.
 
 ### Improved
 

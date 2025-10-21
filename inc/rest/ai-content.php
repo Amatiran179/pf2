@@ -15,9 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 use PF2\AI\AdapterInterface;
 use PF2\AI\MockAdapter;
 use PF2\AI\OpenAIAdapter;
-use WP_REST_Request;
-use WP_REST_Response;
-use Throwable;
 
 if ( ! function_exists( 'pf2_rest_ai_generate' ) ) {
         /**
@@ -27,7 +24,7 @@ if ( ! function_exists( 'pf2_rest_ai_generate' ) ) {
          *
          * @return WP_REST_Response
          */
-        function pf2_rest_ai_generate( WP_REST_Request $request ) {
+        function pf2_rest_ai_generate( \WP_REST_Request $request ) {
                 $topic = $request->get_param( 'topic' );
                 $tone  = $request->get_param( 'tone' );
                 $lang  = $request->get_param( 'lang' );
@@ -138,7 +135,7 @@ if ( ! function_exists( 'pf2_rest_ai_generate' ) ) {
 
                 try {
                         $result = $adapter->generate( $prompt_args );
-                } catch ( Throwable $throwable ) {
+                } catch ( \Throwable $throwable ) {
                         $message = $throwable->getMessage();
 
                         if ( empty( $message ) ) {
@@ -274,7 +271,7 @@ if ( ! function_exists( 'pf2_rest_ai_rate_limit_key' ) ) {
          *
          * @return string
          */
-        function pf2_rest_ai_rate_limit_key( WP_REST_Request $request ) {
+        function pf2_rest_ai_rate_limit_key( \WP_REST_Request $request ) {
                 $user_id = get_current_user_id();
 
                 if ( $user_id ) {
