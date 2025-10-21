@@ -1,0 +1,1 @@
+System.register([],function(e,t){"use strict";return{execute:function(){var e=document.createElement("style");e.textContent=".pf2-grid img{display:block;max-width:100%;height:auto}\n/*$vite$:1*/",document.head.appendChild(e),document.addEventListener("DOMContentLoaded",function(){})}}});
