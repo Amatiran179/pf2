@@ -1,17 +1,14 @@
 /*
-Theme Name: PutraFiber AI Theme v2 (pf2)
-Theme URI: https://putrafiber.com/pf2
-Author: PutraFiber Lab
+Theme Name: PutraFiber v2
+Theme URI: https://github.com/Amatiran179/pf2/
+Author: PutraFiber Dev Team
 Author URI: https://putrafiber.com
-Description: Enterprise WordPress theme scaffold focusing on SEO automation, CTA orchestration, analytics readiness, and AI integrations.
-Version: 0.1.0
-Requires at least: 6.8
-Requires PHP: 8.2
-Tested up to: 6.8
+Description: WordPress theme profesional untuk waterpark & kontraktor fiberglass, lengkap dengan CPT, CTA, SEO, Schema, AI, dan Performance Engine.
+Version: 2.0.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: pf2
-Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
+Tags: responsive, waterpark, seo, ai, schema, performance
 */
 
 /* Base design tokens and defaults for pf2 core theme scaffolding. */
