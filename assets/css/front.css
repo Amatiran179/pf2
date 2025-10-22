@@ -403,6 +403,14 @@ img {
   background: var(--pf2-color-accent, #0ea5e9);
 }
 
+.pf2-gallery__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(70vh, 720px);
+  object-fit: contain;
+}
+
 .pf2-gallery__fallback,
 .pf2-gallery__empty {
   margin: 0;

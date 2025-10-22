@@ -204,7 +204,7 @@ if ( ! function_exists( 'pf2_gallery_render' ) ) {
 
                         echo '<div class="swiper-slide">';
                         echo '<a class="pf2-gl" href="' . esc_url( $image_url ) . '" data-lightbox="' . esc_attr( $group_attr ) . '" data-thumbnail="' . esc_url( $thumb_url ) . '">';
-                        echo '<img src="' . esc_url( $image_url ) . '"';
+                        echo '<img class="pf2-gallery__image" src="' . esc_url( $image_url ) . '"';
 
                         if ( $width && $height ) {
                                 echo ' width="' . esc_attr( (string) $width ) . '" height="' . esc_attr( (string) $height ) . '"';
