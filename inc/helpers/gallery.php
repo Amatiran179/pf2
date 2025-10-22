@@ -83,6 +83,30 @@ if ( ! function_exists( 'pf2_gallery_get_images' ) ) {
                         }
                 }
 
+                if ( empty( $meta_ids ) ) {
+                        $attachment_ids = get_posts(
+                                array(
+                                        'post_parent'    => $post_id,
+                                        'post_type'      => 'attachment',
+                                        'post_mime_type' => 'image',
+                                        'orderby'        => 'menu_order ID',
+                                        'order'          => 'ASC',
+                                        'numberposts'    => -1,
+                                        'fields'         => 'ids',
+                                )
+                        );
+
+                        if ( $attachment_ids && is_array( $attachment_ids ) ) {
+                                foreach ( $attachment_ids as $attachment_id ) {
+                                        $attachment_id = absint( $attachment_id );
+                                        if ( $attachment_id && ! isset( $unique_ids[ $attachment_id ] ) ) {
+                                                $meta_ids[]                 = $attachment_id;
+                                                $unique_ids[ $attachment_id ] = true;
+                                        }
+                                }
+                        }
+                }
+
                 foreach ( $meta_ids as $attachment_id ) {
                         $data = pf2_gallery_prepare_image_data( $attachment_id );
 
