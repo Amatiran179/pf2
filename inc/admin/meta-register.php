@@ -69,9 +69,9 @@ if ( ! function_exists( 'pf2_meta_sanitize_number' ) ) {
                  * Sanitize a numeric meta value.
                  *
                  * Ensures the stored value respects the registered number type by
-                 * returning a float. Empty or invalid input is normalised to null so
-                 * consumers can distinguish between an author-provided value and an
-                 * unset price.
+                 * returning a float. Empty or invalid input is normalised to 0.0 to
+                 * avoid persisting unexpected data and prevent register_meta
+                 * notices.
                  *
                  * @param mixed $value Raw value.
                  * @return float|null
@@ -173,11 +173,11 @@ if ( ! function_exists( 'pf2_meta_register_post_meta' ) ) {
 								'sanitize_callback' => 'pf2_meta_sanitize_text',
 								'default'           => $product_defaults['pf2_size'],
 						),
-                                                'pf2_price'        => array(
-                                                                'type'              => 'number',
-                                                                'sanitize_callback' => 'pf2_meta_sanitize_number',
-                                                                'default'           => null,
-                                                ),
+                                               'pf2_price'        => array(
+                                                               'type'              => 'number',
+                                                               'sanitize_callback' => 'pf2_meta_sanitize_number',
+                                                               'default'           => 1000.0,
+                                               ),
 						'pf2_currency'     => array(
 								'type'              => 'string',
 								'sanitize_callback' => 'pf2_meta_sanitize_text',
