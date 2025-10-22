@@ -34,7 +34,7 @@ if ( ! function_exists( 'pf2_schema_build_product' ) ) {
 				$size     = pf2_schema_get_meta_text( $post_id, 'pf2_size' );
 
 				$price_raw = get_post_meta( $post_id, 'pf2_price', true );
-				$price     = ( '' !== $price_raw && null !== $price_raw && is_numeric( $price_raw ) ) ? (string) (float) $price_raw : '1000';
+				$price     = ( '' !== $price_raw && null !== $price_raw && is_numeric( $price_raw ) ) ? (string) (float) $price_raw : '1000.0';
 
 				$currency = pf2_schema_get_meta_text( $post_id, 'pf2_currency' );
 				if ( '' === $currency ) {
@@ -55,10 +55,10 @@ if ( ! function_exists( 'pf2_schema_build_product' ) ) {
 
 				$additional_properties = array();
 				$property_map          = array(
-						'Material' => $material,
-						'Model'    => $model,
-						'Warna'    => $color,
-						'Ukuran'   => $size,
+						sanitize_text_field( __( 'Material', 'pf2' ) ) => $material,
+						sanitize_text_field( __( 'Model', 'pf2' ) )    => $model,
+						sanitize_text_field( __( 'Warna', 'pf2' ) )    => $color,
+						sanitize_text_field( __( 'Ukuran', 'pf2' ) )   => $size,
 				);
 
 				foreach ( $property_map as $name => $value ) {

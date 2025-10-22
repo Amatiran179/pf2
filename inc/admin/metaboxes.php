@@ -117,7 +117,7 @@ if ( ! function_exists( 'pf2_admin_render_product_metabox' ) ) {
 						$values[ $key ] = '' !== $raw_value && null !== $raw_value ? $raw_value : $default;
 				}
 
-				wp_nonce_field( 'pf2_product_meta_nonce', 'pf2_product_meta_nonce' );
+                               wp_nonce_field( 'pf2_product_meta_box_save', 'pf2_product_meta_box_nonce' );
 				?>
 				<table class="form-table pf2-meta-table">
 						<tbody>
@@ -198,7 +198,7 @@ if ( ! function_exists( 'pf2_admin_render_portfolio_metabox' ) ) {
 						$values[ $key ] = '' !== $raw_value && null !== $raw_value ? $raw_value : $default;
 				}
 
-				wp_nonce_field( 'pf2_portfolio_meta_nonce', 'pf2_portfolio_meta_nonce' );
+                               wp_nonce_field( 'pf2_portfolio_meta_box_save', 'pf2_portfolio_meta_box_nonce' );
 				?>
 				<table class="form-table pf2-meta-table">
 						<tbody>
@@ -243,15 +243,15 @@ if ( ! function_exists( 'pf2_admin_save_product_meta' ) ) {
 						return;
 				}
 
-				if ( ! isset( $_POST['pf2_product_meta_nonce'] ) ) {
-						return;
-				}
+                               if ( ! isset( $_POST['pf2_product_meta_box_nonce'] ) ) {
+                                               return;
+                               }
 
-				$nonce = sanitize_text_field( wp_unslash( $_POST['pf2_product_meta_nonce'] ) );
+                               $nonce = sanitize_text_field( wp_unslash( $_POST['pf2_product_meta_box_nonce'] ) );
 
-				if ( ! wp_verify_nonce( $nonce, 'pf2_product_meta_nonce' ) ) {
-						return;
-				}
+                               if ( ! wp_verify_nonce( $nonce, 'pf2_product_meta_box_save' ) ) {
+                                               return;
+                               }
 
 				if ( ! current_user_can( 'edit_post', $post_id ) ) {
 						return;
@@ -313,15 +313,15 @@ if ( ! function_exists( 'pf2_admin_save_portfolio_meta' ) ) {
 						return;
 				}
 
-				if ( ! isset( $_POST['pf2_portfolio_meta_nonce'] ) ) {
-						return;
-				}
+                               if ( ! isset( $_POST['pf2_portfolio_meta_box_nonce'] ) ) {
+                                               return;
+                               }
 
-				$nonce = sanitize_text_field( wp_unslash( $_POST['pf2_portfolio_meta_nonce'] ) );
+                               $nonce = sanitize_text_field( wp_unslash( $_POST['pf2_portfolio_meta_box_nonce'] ) );
 
-				if ( ! wp_verify_nonce( $nonce, 'pf2_portfolio_meta_nonce' ) ) {
-						return;
-				}
+                               if ( ! wp_verify_nonce( $nonce, 'pf2_portfolio_meta_box_save' ) ) {
+                                               return;
+                               }
 
 				if ( ! current_user_can( 'edit_post', $post_id ) ) {
 						return;
