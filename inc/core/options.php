@@ -30,8 +30,26 @@ if ( ! function_exists( 'pf2_options_defaults' ) ) {
 			'logo_url'             => '',
 			'favicon_url'          => '',
 			'ai_api_key'           => '',
-			'schema_enabled'       => 1,
-		);
+                        'schema_enabled'                 => 1,
+                        'localbusiness_enabled'           => 0,
+                        'localbusiness_type'              => 'LocalBusiness',
+                        'localbusiness_name'              => '',
+                        'localbusiness_description'       => '',
+                        'localbusiness_street'            => '',
+                        'localbusiness_locality'          => '',
+                        'localbusiness_region'            => '',
+                        'localbusiness_postal'            => '',
+                        'localbusiness_country'           => '',
+                        'localbusiness_latitude'          => '',
+                        'localbusiness_longitude'         => '',
+                        'localbusiness_telephone'         => '',
+                        'localbusiness_url'               => '',
+                        'localbusiness_price_range'       => '',
+                        'localbusiness_same_as'           => array(),
+                        'localbusiness_opening_hours'     => array(),
+                        'localbusiness_area_served'       => '',
+                        'localbusiness_target_pages'      => array(),
+                );
 
 		/**
 		 * Filter the default option set.
