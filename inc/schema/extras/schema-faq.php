@@ -21,6 +21,10 @@ if ( ! function_exists( 'pf2_schema_extra_faq' ) ) {
             return array();
         }
 
+        if ( ! rest_sanitize_boolean( get_post_meta( $post->ID, 'pf2_schema_faq_enabled', true ) ) ) {
+            return array();
+        }
+
         $items = get_post_meta( $post->ID, 'pf2_schema_faq_items', true );
 
         if ( ! is_array( $items ) || empty( $items ) ) {

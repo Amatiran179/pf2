@@ -21,6 +21,10 @@ if ( ! function_exists( 'pf2_schema_extra_video' ) ) {
             return array();
         }
 
+        if ( ! rest_sanitize_boolean( get_post_meta( $post->ID, 'pf2_schema_video_enabled', true ) ) ) {
+            return array();
+        }
+
         $url = get_post_meta( $post->ID, 'pf2_schema_video_url', true );
 
         if ( ! is_string( $url ) || '' === trim( $url ) ) {
@@ -29,7 +33,7 @@ if ( ! function_exists( 'pf2_schema_extra_video' ) ) {
 
         $name        = get_post_meta( $post->ID, 'pf2_schema_video_name', true );
         $description = get_post_meta( $post->ID, 'pf2_schema_video_description', true );
-        $thumbnail   = get_post_meta( $post->ID, 'pf2_schema_video_thumbnail', true );
+        $thumbnail   = (int) get_post_meta( $post->ID, 'pf2_schema_video_thumbnail_id', true );
         $upload_date = get_post_meta( $post->ID, 'pf2_schema_video_upload_date', true );
 
         $schema = array(
@@ -40,8 +44,16 @@ if ( ! function_exists( 'pf2_schema_extra_video' ) ) {
             'description' => wp_strip_all_tags( (string) $description ),
         );
 
-        if ( is_string( $thumbnail ) && '' !== trim( $thumbnail ) ) {
-            $schema['thumbnailUrl'] = esc_url_raw( $thumbnail );
+        if ( $thumbnail ) {
+            $thumb_url = wp_get_attachment_image_url( $thumbnail, 'full' );
+            if ( $thumb_url ) {
+                $schema['thumbnailUrl'] = esc_url_raw( $thumb_url );
+            }
+        } else {
+            $legacy_thumbnail = get_post_meta( $post->ID, 'pf2_schema_video_thumbnail', true );
+            if ( is_string( $legacy_thumbnail ) && '' !== trim( $legacy_thumbnail ) ) {
+                $schema['thumbnailUrl'] = esc_url_raw( $legacy_thumbnail );
+            }
         }
 
         if ( is_string( $upload_date ) && '' !== trim( $upload_date ) ) {

@@ -31,6 +31,7 @@ if ( is_admin() ) {
         require_once get_template_directory() . '/inc/admin/editor-panels.php';
         require_once get_template_directory() . '/inc/admin/editor-gallery-panel.php';
         require_once get_template_directory() . '/inc/admin/editor-schema-panels.php';
+        require_once get_template_directory() . '/inc/admin/classic-schema-metabox.php';
         require_once get_template_directory() . '/inc/admin/metaboxes.php';
         require_once get_template_directory() . '/inc/admin/settings-ui.php';
         require_once get_template_directory() . '/inc/admin/schema-options.php';

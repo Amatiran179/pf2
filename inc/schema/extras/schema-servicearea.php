@@ -21,6 +21,10 @@ if ( ! function_exists( 'pf2_schema_extra_service_area' ) ) {
             return array();
         }
 
+        if ( ! rest_sanitize_boolean( get_post_meta( $post->ID, 'pf2_schema_servicearea_enabled', true ) ) ) {
+            return array();
+        }
+
         $type   = get_post_meta( $post->ID, 'pf2_schema_servicearea_type', true );
         $values = get_post_meta( $post->ID, 'pf2_schema_servicearea_values', true );
         $postal = get_post_meta( $post->ID, 'pf2_schema_servicearea_postal', true );
