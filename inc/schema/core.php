@@ -74,6 +74,10 @@ if ( ! function_exists( 'pf2_schema_output' ) ) {
                 continue;
             }
 
+            if ( empty( $schema['@context'] ) ) {
+                $schema['@context'] = 'https://schema.org';
+            }
+
             $type = strtolower( (string) $schema['@type'] );
             $url  = isset( $schema['url'] ) ? strtolower( (string) $schema['url'] ) : '';
             $key  = $type . '|' . $url;
