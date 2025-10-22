@@ -41,6 +41,18 @@ if ( ! function_exists( 'pf2_schema_build_product' ) ) {
 						$currency = 'IDR';
 				}
 
+				$offers = array();
+				if ( null !== $price ) {
+						$offers = array(
+								'@type'         => 'Offer',
+								'priceCurrency' => $currency,
+								'price'         => $price,
+								'availability'  => 'https://schema.org/InStock',
+								'url'           => esc_url_raw( get_permalink( $post ) ),
+								'validFrom'     => get_post_time( 'c', true, $post ),
+								);
+				}
+
 				$brand = 'PutraFiber';
 
 				$features_raw = pf2_schema_get_meta_text( $post_id, 'pf2_features' );
@@ -89,14 +101,7 @@ if ( ! function_exists( 'pf2_schema_build_product' ) ) {
 						'color'               => $color,
 						'size'                => $size,
 						'additionalProperty'  => $additional_properties,
-						'offers'              => array(
-								'@type'         => 'Offer',
-								'priceCurrency' => $currency,
-								'price'         => $price,
-								'availability'  => 'https://schema.org/InStock',
-								'url'           => esc_url_raw( get_permalink( $post ) ),
-								'validFrom'     => get_post_time( 'c', true, $post ),
-						),
+						'offers'              => $offers,
 				);
 
 				return pf2_schema_array_filter_recursive( $data );

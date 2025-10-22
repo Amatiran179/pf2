@@ -74,10 +74,16 @@ if ( ! function_exists( 'pf2_meta_sanitize_number' ) ) {
                  * notices.
                  *
                  * @param mixed $value Raw value.
-                 * @return float
+                 * @return float|null
                  */
                 function pf2_meta_sanitize_number( $value ) {
                                 if ( is_string( $value ) ) {
+                                                $value = trim( $value );
+
+                                                if ( '' === $value ) {
+                                                                return null;
+                                                }
+
                                                 $value = str_replace( ',', '.', $value );
                                 }
 
@@ -85,7 +91,7 @@ if ( ! function_exists( 'pf2_meta_sanitize_number' ) ) {
                                                 return (float) $value;
                                 }
 
-                                return 0.0;
+                                return null;
                 }
 }
 
