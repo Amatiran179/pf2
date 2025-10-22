@@ -132,6 +132,54 @@ if ( ! function_exists( 'pf2_meta_sanitize_gallery_csv' ) ) {
 		}
 }
 
+if ( ! function_exists( 'pf2_meta_normalize_meta_default' ) ) {
+		/**
+		 * Ensure register_post_meta defaults respect the declared type.
+		 *
+		 * WordPress triggers a notice when the provided default does not
+		 * match the `type` argument. This helper coerces scalar defaults
+		 * for numeric and boolean types so registration remains noise
+		 * free even if values were originally provided as strings.
+		 *
+		 * @param array<string, mixed> $args Meta registration arguments.
+		 * @return array<string, mixed>
+		 */
+		function pf2_meta_normalize_meta_default( array $args ) {
+			if ( ! isset( $args['type'], $args['default'] ) ) {
+				return $args;
+			}
+
+			switch ( $args['type'] ) {
+				case 'number':
+					if ( is_numeric( $args['default'] ) ) {
+						$args['default'] = (float) $args['default'];
+					}
+					break;
+				case 'integer':
+					if ( is_numeric( $args['default'] ) ) {
+						$args['default'] = (int) $args['default'];
+					}
+					break;
+				case 'boolean':
+					if ( is_string( $args['default'] ) ) {
+						$value = strtolower( $args['default'] );
+
+						if ( in_array( $value, array( '1', 'true', 'yes' ), true ) ) {
+							$args['default'] = true;
+						} elseif ( in_array( $value, array( '0', 'false', 'no', '' ), true ) ) {
+							$args['default'] = false;
+						}
+					} else {
+						$args['default'] = (bool) $args['default'];
+					}
+					break;
+			}
+
+			return $args;
+		}
+}
+
+
 if ( ! function_exists( 'pf2_meta_register_post_meta' ) ) {
 		/**
 		 * Register post meta for PF2 custom post types.
@@ -195,11 +243,12 @@ if ( ! function_exists( 'pf2_meta_register_post_meta' ) ) {
                                                ),
 				);
 
-				foreach ( $product_meta as $key => $args ) {
-						register_post_meta(
-								'pf2_product',
-								$key,
-								array_merge(
+                               foreach ( $product_meta as $key => $args ) {
+                                               $args = pf2_meta_normalize_meta_default( $args );
+                                               register_post_meta(
+                                                               'pf2_product',
+                                                               $key,
+                                                               array_merge(
 										array(
 												'single'        => true,
 												'show_in_rest'  => true,
@@ -228,11 +277,12 @@ if ( ! function_exists( 'pf2_meta_register_post_meta' ) ) {
                                                ),
 				);
 
-				foreach ( $portfolio_meta as $key => $args ) {
-						register_post_meta(
-								'pf2_portfolio',
-								$key,
-								array_merge(
+                               foreach ( $portfolio_meta as $key => $args ) {
+                                               $args = pf2_meta_normalize_meta_default( $args );
+                                               register_post_meta(
+                                                               'pf2_portfolio',
+                                                               $key,
+                                                               array_merge(
 										array(
 												'single'        => true,
 												'show_in_rest'  => true,
