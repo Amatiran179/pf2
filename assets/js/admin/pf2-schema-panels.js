@@ -6,11 +6,25 @@
 
   const { registerPlugin } = wp.plugins || {};
   const { PluginDocumentSettingPanel } = wp.editPost || {};
-  const { TabPanel, ToggleControl, TextControl, TextareaControl, Button, SelectControl, PanelBody, PanelRow } =
-    wp.components || {};
-  const { Fragment, useCallback } = wp.element || {};
-  const { __ } = wp.i18n || {};
+  const {
+    TabPanel,
+    ToggleControl,
+    TextControl,
+    TextareaControl,
+    Button,
+    SelectControl,
+    PanelBody,
+    PanelRow,
+  } = wp.components || {};
+  const element = wp.element || {};
+  const { Fragment, useCallback } = element;
+  const i18n = wp.i18n || {};
+  const translate = typeof i18n.__ === 'function' ? i18n.__ : (text) => text;
+  const format = typeof i18n.sprintf === 'function' ? i18n.sprintf : (...parts) => parts.join(' ');
   const { useEntityProp } = wp.coreData || {};
+  const blockEditor = wp.blockEditor || wp.editor || {};
+  const { MediaUpload, MediaUploadCheck } = blockEditor;
+  const { useSelect } = wp.data || {};
 
   if (!registerPlugin || !PluginDocumentSettingPanel || !TabPanel || !ToggleControl || !useEntityProp) {
     return;
@@ -66,17 +80,17 @@
       .map((item) => {
         const name = sanitizeText(item && typeof item.name === 'string' ? item.name : '');
         const text = sanitizeMultiline(item && typeof item.text === 'string' ? item.text : '');
-        const image = parseInt(item && item.image ? item.image : 0, 10);
-
+        const rawImage = item ? item.image_id ?? item.image : undefined;
+        const image = parseInt(rawImage, 10);
         const step = { name, text };
 
         if (Number.isFinite(image) && image > 0) {
-          step.image = image;
+          step.image_id = image;
         }
 
         return step;
       })
-      .filter((item) => item.name !== '' || item.text !== '' || item.image);
+      .filter((item) => item.name !== '' || item.text !== '' || item.image_id);
   };
 
   const normalizeStringArray = (values) => {
@@ -100,26 +114,33 @@
     return seen;
   };
 
-  const normalizeIntArray = (values) => {
-    if (!Array.isArray(values)) {
-      return [];
+  const sanitizeCsvIds = (value) => {
+    let source = value;
+
+    if (Array.isArray(source)) {
+      source = source.join(',');
     }
 
-    const seen = [];
+    if (typeof source !== 'string') {
+      return '';
+    }
 
-    values.forEach((value) => {
-      const number = parseInt(value, 10);
-      if (Number.isFinite(number) && number > 0 && !seen.includes(number)) {
-        seen.push(number);
-      }
-    });
+    const ids = [];
+    source
+      .split(',')
+      .map((part) => part.trim())
+      .forEach((part) => {
+        const number = parseInt(part, 10);
+        if (Number.isFinite(number) && number > 0 && !ids.includes(number)) {
+          ids.push(number);
+        }
+      });
 
-    return seen;
+    return ids.join(',');
   };
 
   const SchemaExtrasPanel = () => {
     const [meta, setMeta] = useEntityProp('postType', postType, 'meta');
-
     const safeMeta = meta || {};
 
     const setMetaValue = useCallback(
@@ -143,6 +164,69 @@
       [safeMeta]
     );
 
+    const mediaAvailable = !!MediaUpload && !!MediaUploadCheck && typeof useSelect === 'function';
+
+    const MediaPicker = ({ value, onChange, selectText, replaceText, clearText, description }) => {
+      const parsedValue = parseInt(value, 10) || 0;
+
+      if (!mediaAvailable) {
+        return (
+          <TextControl
+            label={description}
+            type="number"
+            value={parsedValue > 0 ? parsedValue : ''}
+            onChange={(next) => {
+              const number = parseInt(next, 10);
+              onChange(Number.isFinite(number) && number > 0 ? number : 0);
+            }}
+          />
+        );
+      }
+
+      const media = useSelect(
+        (select) => {
+          if (!parsedValue) {
+            return null;
+          }
+
+          const core = select('core');
+          if (!core || typeof core.getMedia !== 'function') {
+            return null;
+          }
+
+          return core.getMedia(parsedValue);
+        },
+        [parsedValue]
+      );
+
+      const currentLabel = parsedValue
+        ? (media && media.title && (media.title.rendered || media.title.raw || media.title)) || format(translate('ID: %d', 'pf2'), parsedValue)
+        : labels.noImage || translate('Belum ada gambar.', 'pf2');
+
+      return (
+        <MediaUploadCheck>
+          <MediaUpload
+            allowedTypes={['image']}
+            value={parsedValue}
+            onSelect={(item) => onChange(item && item.id ? item.id : 0)}
+            render={({ open }) => (
+              <div className="pf2-schema-panel__media">
+                <Button variant="secondary" onClick={open}>
+                  {parsedValue ? replaceText : selectText}
+                </Button>
+                {parsedValue ? (
+                  <Button variant="tertiary" onClick={() => onChange(0)}>
+                    {clearText}
+                  </Button>
+                ) : null}
+                <p className="description">{currentLabel}</p>
+              </div>
+            )}
+          />
+        </MediaUploadCheck>
+      );
+    };
+
     const renderFaqTab = () => {
       const enabled = !!getMetaValue('pf2_schema_faq_enabled', false);
       const items = normalizeFaqItems(getMetaValue('pf2_schema_faq_items', []));
@@ -153,7 +237,14 @@
 
       const changeItem = (index, field, value) => {
         const next = items.slice();
-        const item = { ...next[index], [field]: value };
+        const item = { ...next[index] };
+
+        if (value === undefined) {
+          delete item[field];
+        } else {
+          item[field] = value;
+        }
+
         next[index] = item;
         updateItems(next);
       };
@@ -171,30 +262,30 @@
       return (
         <Fragment>
           <ToggleControl
-            label={labels.tabFaq || __('FAQ', 'pf2')}
+            label={labels.tabFaq || translate('FAQ', 'pf2')}
             checked={enabled}
             onChange={(nextValue) => setMetaValue('pf2_schema_faq_enabled', !!nextValue)}
           />
-          {items.length === 0 ? <p>{labels.emptyFaq || __('Belum ada FAQ.', 'pf2')}</p> : null}
+          {items.length === 0 ? <p>{labels.emptyFaq || translate('Belum ada FAQ.', 'pf2')}</p> : null}
           {items.map((item, index) => (
             <div className="pf2-schema-panel__group" key={`faq-${index}`}>
               <TextControl
-                label={__('Pertanyaan', 'pf2')}
+                label={translate('Pertanyaan', 'pf2')}
                 value={item.question}
                 onChange={(value) => changeItem(index, 'question', sanitizeText(value))}
               />
               <TextareaControl
-                label={__('Jawaban', 'pf2')}
+                label={translate('Jawaban', 'pf2')}
                 value={item.answer}
                 onChange={(value) => changeItem(index, 'answer', sanitizeMultiline(value))}
               />
               <Button variant="tertiary" onClick={() => removeItem(index)}>
-                {labels.removeItem || __('Hapus', 'pf2')}
+                {labels.removeItem || translate('Hapus', 'pf2')}
               </Button>
             </div>
           ))}
           <Button variant="secondary" onClick={addItem}>
-            {labels.addItem || __('Tambah', 'pf2')}
+            {labels.addItem || translate('Tambah', 'pf2')}
           </Button>
         </Fragment>
       );
@@ -211,7 +302,14 @@
 
       const changeStep = (index, field, value) => {
         const next = steps.slice();
-        const step = { ...next[index], [field]: value };
+        const step = { ...next[index] };
+
+        if (value === undefined) {
+          delete step[field];
+        } else {
+          step[field] = value;
+        }
+
         next[index] = step;
         updateSteps(next);
       };
@@ -229,44 +327,43 @@
       return (
         <Fragment>
           <ToggleControl
-            label={labels.tabHowTo || __('HowTo', 'pf2')}
+            label={labels.tabHowTo || translate('HowTo', 'pf2')}
             checked={enabled}
             onChange={(nextValue) => setMetaValue('pf2_schema_howto_enabled', !!nextValue)}
           />
           <TextControl
-            label={__('Judul HowTo', 'pf2')}
+            label={translate('Judul HowTo', 'pf2')}
             value={title}
             onChange={(value) => setMetaValue('pf2_schema_howto_name', sanitizeText(value))}
           />
-          {steps.length === 0 ? <p>{labels.emptySteps || __('Belum ada langkah HowTo.', 'pf2')}</p> : null}
+          {steps.length === 0 ? <p>{labels.emptySteps || translate('Belum ada langkah HowTo.', 'pf2')}</p> : null}
           {steps.map((step, index) => (
             <div className="pf2-schema-panel__group" key={`step-${index}`}>
               <TextControl
-                label={__('Nama Langkah', 'pf2')}
+                label={translate('Nama Langkah', 'pf2')}
                 value={step.name}
                 onChange={(value) => changeStep(index, 'name', sanitizeText(value))}
               />
               <TextareaControl
-                label={__('Deskripsi', 'pf2')}
+                label={translate('Deskripsi', 'pf2')}
                 value={step.text}
                 onChange={(value) => changeStep(index, 'text', sanitizeMultiline(value))}
               />
-              <TextControl
-                label={__('ID Gambar (opsional)', 'pf2')}
-                type="number"
-                value={step.image || ''}
-                onChange={(value) => {
-                  const number = parseInt(value, 10);
-                  changeStep(index, 'image', Number.isFinite(number) && number > 0 ? number : undefined);
-                }}
+              <MediaPicker
+                value={step.image_id || 0}
+                onChange={(nextValue) => changeStep(index, 'image_id', nextValue > 0 ? nextValue : undefined)}
+                selectText={labels.selectImage || translate('Pilih gambar', 'pf2')}
+                replaceText={labels.replaceImage || translate('Ganti gambar', 'pf2')}
+                clearText={labels.clearImage || translate('Hapus gambar', 'pf2')}
+                description={translate('ID Gambar', 'pf2')}
               />
               <Button variant="tertiary" onClick={() => removeStep(index)}>
-                {labels.removeItem || __('Hapus', 'pf2')}
+                {labels.removeItem || translate('Hapus', 'pf2')}
               </Button>
             </div>
           ))}
           <Button variant="secondary" onClick={addStep}>
-            {labels.addItem || __('Tambah', 'pf2')}
+            {labels.addItem || translate('Tambah', 'pf2')}
           </Button>
         </Fragment>
       );
@@ -277,38 +374,41 @@
       const url = sanitizeText(getMetaValue('pf2_schema_video_url', ''));
       const name = sanitizeText(getMetaValue('pf2_schema_video_name', ''));
       const description = sanitizeMultiline(getMetaValue('pf2_schema_video_description', ''));
-      const thumbnail = sanitizeText(getMetaValue('pf2_schema_video_thumbnail', ''));
+      const thumbnailId = parseInt(getMetaValue('pf2_schema_video_thumbnail_id', 0), 10) || 0;
       const uploadDate = sanitizeText(getMetaValue('pf2_schema_video_upload_date', ''));
 
       return (
         <Fragment>
           <ToggleControl
-            label={labels.tabVideo || __('Video', 'pf2')}
+            label={labels.tabVideo || translate('Video', 'pf2')}
             checked={enabled}
             onChange={(nextValue) => setMetaValue('pf2_schema_video_enabled', !!nextValue)}
           />
           <TextControl
-            label={__('URL Video', 'pf2')}
+            label={translate('URL Video', 'pf2')}
             value={url}
             onChange={(value) => setMetaValue('pf2_schema_video_url', sanitizeText(value))}
           />
           <TextControl
-            label={__('Judul Video', 'pf2')}
+            label={translate('Judul Video', 'pf2')}
             value={name}
             onChange={(value) => setMetaValue('pf2_schema_video_name', sanitizeText(value))}
           />
           <TextareaControl
-            label={__('Deskripsi Video', 'pf2')}
+            label={translate('Deskripsi Video', 'pf2')}
             value={description}
             onChange={(value) => setMetaValue('pf2_schema_video_description', sanitizeMultiline(value))}
           />
-          <TextControl
-            label={__('Thumbnail URL', 'pf2')}
-            value={thumbnail}
-            onChange={(value) => setMetaValue('pf2_schema_video_thumbnail', sanitizeText(value))}
+          <MediaPicker
+            value={thumbnailId}
+            onChange={(nextValue) => setMetaValue('pf2_schema_video_thumbnail_id', nextValue > 0 ? nextValue : 0)}
+            selectText={labels.selectThumbnail || translate('Pilih thumbnail', 'pf2')}
+            replaceText={labels.replaceThumbnail || translate('Ganti thumbnail', 'pf2')}
+            clearText={labels.clearThumbnail || translate('Hapus thumbnail', 'pf2')}
+            description={translate('ID Thumbnail', 'pf2')}
           />
           <TextControl
-            label={__('Tanggal Upload (ISO8601)', 'pf2')}
+            label={translate('Tanggal Upload (ISO8601)', 'pf2')}
             value={uploadDate}
             onChange={(value) => setMetaValue('pf2_schema_video_upload_date', sanitizeText(value))}
           />
@@ -339,19 +439,19 @@
       return (
         <Fragment>
           <ToggleControl
-            label={labels.tabServiceArea || __('Service Area', 'pf2')}
+            label={labels.tabServiceArea || translate('Service Area', 'pf2')}
             checked={enabled}
             onChange={(nextValue) => setMetaValue('pf2_schema_servicearea_enabled', !!nextValue)}
           />
           <SelectControl
-            label={__('Tipe Area', 'pf2')}
+            label={translate('Tipe Area', 'pf2')}
             value={type}
             options={serviceAreaTypes}
             onChange={(value) => setMetaValue('pf2_schema_servicearea_type', sanitizeText(value))}
           />
           <TextareaControl
-            label={labels.serviceAreaValues || __('Daftar area (pisahkan baris).', 'pf2')}
-            help={__('Gunakan satu baris per area untuk City/Country/Region.', 'pf2')}
+            label={labels.serviceAreaValues || translate('Daftar area (pisahkan baris).', 'pf2')}
+            help={translate('Gunakan satu baris per area untuk City/Country/Region.', 'pf2')}
             value={values.join('\n')}
             onChange={(value) => {
               const parts = sanitizeMultiline(value)
@@ -361,10 +461,10 @@
               setMetaValue('pf2_schema_servicearea_values', normalizeStringArray(parts));
             }}
           />
-          <PanelBody title={__('PostalAddress', 'pf2')} initialOpen={false}>
+          <PanelBody title={translate('PostalAddress', 'pf2')} initialOpen={false}>
             <PanelRow>
               <TextControl
-                label={__('Alamat Jalan', 'pf2')}
+                label={translate('Alamat Jalan', 'pf2')}
                 value={postal.streetAddress}
                 onChange={(value) =>
                   setMetaValue('pf2_schema_servicearea_postal', {
@@ -376,7 +476,7 @@
             </PanelRow>
             <PanelRow>
               <TextControl
-                label={__('Kota', 'pf2')}
+                label={translate('Kota', 'pf2')}
                 value={postal.addressLocality}
                 onChange={(value) =>
                   setMetaValue('pf2_schema_servicearea_postal', {
@@ -388,7 +488,7 @@
             </PanelRow>
             <PanelRow>
               <TextControl
-                label={__('Provinsi/Region', 'pf2')}
+                label={translate('Provinsi/Region', 'pf2')}
                 value={postal.addressRegion}
                 onChange={(value) =>
                   setMetaValue('pf2_schema_servicearea_postal', {
@@ -400,7 +500,7 @@
             </PanelRow>
             <PanelRow>
               <TextControl
-                label={__('Kode Pos', 'pf2')}
+                label={translate('Kode Pos', 'pf2')}
                 value={postal.postalCode}
                 onChange={(value) =>
                   setMetaValue('pf2_schema_servicearea_postal', {
@@ -412,7 +512,7 @@
             </PanelRow>
             <PanelRow>
               <TextControl
-                label={__('Negara', 'pf2')}
+                label={translate('Negara', 'pf2')}
                 value={postal.addressCountry}
                 onChange={(value) =>
                   setMetaValue('pf2_schema_servicearea_postal', {
@@ -423,11 +523,11 @@
               />
             </PanelRow>
           </PanelBody>
-          <PanelBody title={__('GeoShape', 'pf2')} initialOpen={false}>
+          <PanelBody title={translate('GeoShape', 'pf2')} initialOpen={false}>
             <PanelRow>
               <TextControl
-                label={__('Lingkaran', 'pf2')}
-                help={__('Format: latitude,longitude radius', 'pf2')}
+                label={translate('Lingkaran', 'pf2')}
+                help={translate('Format: latitude,longitude radius', 'pf2')}
                 value={geo.circle}
                 onChange={(value) =>
                   setMetaValue('pf2_schema_servicearea_geo', {
@@ -439,8 +539,8 @@
             </PanelRow>
             <PanelRow>
               <TextareaControl
-                label={__('Polygon', 'pf2')}
-                help={__('Daftar koordinat dipisahkan spasi.', 'pf2')}
+                label={translate('Polygon', 'pf2')}
+                help={translate('Daftar koordinat dipisahkan spasi.', 'pf2')}
                 value={geo.polygon}
                 onChange={(value) =>
                   setMetaValue('pf2_schema_servicearea_geo', {
@@ -459,7 +559,7 @@
       const enabled = !!getMetaValue('pf2_schema_touristattraction_enabled', false);
       const name = sanitizeText(getMetaValue('pf2_schema_touristattraction_name', ''));
       const description = sanitizeMultiline(getMetaValue('pf2_schema_touristattraction_description', ''));
-      const images = normalizeIntArray(getMetaValue('pf2_schema_touristattraction_images', []));
+      const imageCsv = sanitizeCsvIds(getMetaValue('pf2_schema_touristattraction_image_ids', ''));
       const geoRaw = getMetaValue('pf2_schema_touristattraction_geo', {});
       const latitude = sanitizeText(geoRaw && geoRaw.latitude ? geoRaw.latitude : '');
       const longitude = sanitizeText(geoRaw && geoRaw.longitude ? geoRaw.longitude : '');
@@ -467,35 +567,29 @@
       return (
         <Fragment>
           <ToggleControl
-            label={labels.tabTourist || __('Tourist Attraction', 'pf2')}
+            label={labels.tabTourist || translate('Tourist Attraction', 'pf2')}
             checked={enabled}
             onChange={(nextValue) => setMetaValue('pf2_schema_touristattraction_enabled', !!nextValue)}
           />
           <TextControl
-            label={__('Nama', 'pf2')}
+            label={translate('Nama', 'pf2')}
             value={name}
             onChange={(value) => setMetaValue('pf2_schema_touristattraction_name', sanitizeText(value))}
           />
           <TextareaControl
-            label={__('Deskripsi', 'pf2')}
+            label={translate('Deskripsi', 'pf2')}
             value={description}
             onChange={(value) => setMetaValue('pf2_schema_touristattraction_description', sanitizeMultiline(value))}
           />
           <TextControl
-            label={__('ID Gambar (pisahkan koma)', 'pf2')}
-            value={images.join(',')}
-            onChange={(value) => {
-              const parts = sanitizeText(value)
-                .split(',')
-                .map((part) => part.trim())
-                .filter((part) => part !== '');
-              setMetaValue('pf2_schema_touristattraction_images', normalizeIntArray(parts));
-            }}
+            label={translate('ID Gambar (pisahkan koma)', 'pf2')}
+            value={imageCsv}
+            onChange={(value) => setMetaValue('pf2_schema_touristattraction_image_ids', sanitizeCsvIds(value))}
           />
-          <PanelBody title={__('Koordinat', 'pf2')} initialOpen={false}>
+          <PanelBody title={translate('Koordinat', 'pf2')} initialOpen={false}>
             <PanelRow>
               <TextControl
-                label={__('Latitude', 'pf2')}
+                label={translate('Latitude', 'pf2')}
                 value={latitude}
                 onChange={(value) =>
                   setMetaValue('pf2_schema_touristattraction_geo', {
@@ -507,7 +601,7 @@
             </PanelRow>
             <PanelRow>
               <TextControl
-                label={__('Longitude', 'pf2')}
+                label={translate('Longitude', 'pf2')}
                 value={longitude}
                 onChange={(value) =>
                   setMetaValue('pf2_schema_touristattraction_geo', {
@@ -525,18 +619,18 @@
     return (
       <PluginDocumentSettingPanel
         name="pf2-schema-extras"
-        title={labels.panelTitle || __('Schema Extras', 'pf2')}
+        title={labels.panelTitle || translate('PF2 Schema', 'pf2')}
         initialOpen={false}
       >
         <TabPanel
           className="pf2-schema-panel"
           activeClass="is-active"
           tabs={[
-            { name: 'faq', title: labels.tabFaq || __('FAQ', 'pf2') },
-            { name: 'howto', title: labels.tabHowTo || __('HowTo', 'pf2') },
-            { name: 'video', title: labels.tabVideo || __('Video', 'pf2') },
-            { name: 'servicearea', title: labels.tabServiceArea || __('Service Area', 'pf2') },
-            { name: 'tourist', title: labels.tabTourist || __('Tourist Attraction', 'pf2') },
+            { name: 'faq', title: labels.tabFaq || translate('FAQ', 'pf2') },
+            { name: 'howto', title: labels.tabHowTo || translate('HowTo', 'pf2') },
+            { name: 'video', title: labels.tabVideo || translate('Video', 'pf2') },
+            { name: 'servicearea', title: labels.tabServiceArea || translate('Service Area', 'pf2') },
+            { name: 'tourist', title: labels.tabTourist || translate('Tourist Attraction', 'pf2') },
           ]}
         >
           {(tab) => {

@@ -21,6 +21,10 @@ if ( ! function_exists( 'pf2_schema_extra_howto' ) ) {
             return array();
         }
 
+        if ( ! rest_sanitize_boolean( get_post_meta( $post->ID, 'pf2_schema_howto_enabled', true ) ) ) {
+            return array();
+        }
+
         $steps = get_post_meta( $post->ID, 'pf2_schema_howto_steps', true );
 
         if ( ! is_array( $steps ) || empty( $steps ) ) {
@@ -42,7 +46,12 @@ if ( ! function_exists( 'pf2_schema_extra_howto' ) ) {
 
             $label = isset( $step['name'] ) ? trim( (string) $step['name'] ) : '';
             $text  = isset( $step['text'] ) ? trim( (string) $step['text'] ) : '';
-            $image = isset( $step['image'] ) ? absint( $step['image'] ) : 0;
+            $image = 0;
+            if ( isset( $step['image_id'] ) ) {
+                $image = absint( $step['image_id'] );
+            } elseif ( isset( $step['image'] ) ) { // Backwards compatibility.
+                $image = absint( $step['image'] );
+            }
 
             if ( '' === $label && '' === $text && ! $image ) {
                 continue;

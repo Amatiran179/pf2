@@ -21,26 +21,53 @@ if ( ! function_exists( 'pf2_schema_extra_tourist_attraction' ) ) {
             return array();
         }
 
+        if ( ! rest_sanitize_boolean( get_post_meta( $post->ID, 'pf2_schema_touristattraction_enabled', true ) ) ) {
+            return array();
+        }
+
         $name        = get_post_meta( $post->ID, 'pf2_schema_touristattraction_name', true );
         $description = get_post_meta( $post->ID, 'pf2_schema_touristattraction_description', true );
-        $images      = get_post_meta( $post->ID, 'pf2_schema_touristattraction_images', true );
+        $image_csv   = get_post_meta( $post->ID, 'pf2_schema_touristattraction_image_ids', true );
         $geo         = get_post_meta( $post->ID, 'pf2_schema_touristattraction_geo', true );
 
         $name        = is_string( $name ) && '' !== trim( $name ) ? $name : get_the_title( $post );
         $description = is_string( $description ) && '' !== trim( $description ) ? $description : get_the_excerpt( $post );
 
-        $image_urls = array();
-        if ( is_array( $images ) ) {
-            foreach ( $images as $image_id ) {
-                $image_id = absint( $image_id );
-                if ( ! $image_id ) {
-                    continue;
+        $image_ids = array();
+        if ( is_string( $image_csv ) && '' !== trim( $image_csv ) ) {
+            $parts = explode( ',', $image_csv );
+            foreach ( $parts as $part ) {
+                $id = absint( trim( $part ) );
+                if ( $id && ! in_array( $id, $image_ids, true ) ) {
+                    $image_ids[] = $id;
                 }
+            }
+        } elseif ( is_array( $image_csv ) ) { // Backwards compatibility for pre-migration data.
+            foreach ( $image_csv as $part ) {
+                $id = absint( $part );
+                if ( $id && ! in_array( $id, $image_ids, true ) ) {
+                    $image_ids[] = $id;
+                }
+            }
+        }
 
-                $url = wp_get_attachment_image_url( $image_id, 'full' );
-                if ( $url ) {
-                    $image_urls[] = esc_url_raw( $url );
+        if ( empty( $image_ids ) ) {
+            $legacy_images = get_post_meta( $post->ID, 'pf2_schema_touristattraction_images', true );
+            if ( is_array( $legacy_images ) ) {
+                foreach ( $legacy_images as $legacy_id ) {
+                    $legacy_id = absint( $legacy_id );
+                    if ( $legacy_id && ! in_array( $legacy_id, $image_ids, true ) ) {
+                        $image_ids[] = $legacy_id;
+                    }
                 }
+            }
+        }
+
+        $image_urls = array();
+        foreach ( $image_ids as $image_id ) {
+            $url = wp_get_attachment_image_url( $image_id, 'full' );
+            if ( $url ) {
+                $image_urls[] = esc_url_raw( $url );
             }
         }
 

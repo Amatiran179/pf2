@@ -61,7 +61,7 @@ if ( ! function_exists( 'pf2_admin_enqueue_schema_panels' ) ) {
         $config = array(
             'postType' => $screen->post_type,
             'i18n'     => array(
-                'panelTitle'        => esc_html__( 'Schema Extras', 'pf2' ),
+                'panelTitle'        => esc_html__( 'PF2 Schema', 'pf2' ),
                 'tabFaq'            => esc_html__( 'FAQ', 'pf2' ),
                 'tabHowTo'          => esc_html__( 'HowTo', 'pf2' ),
                 'tabVideo'          => esc_html__( 'Video', 'pf2' ),
@@ -72,6 +72,13 @@ if ( ! function_exists( 'pf2_admin_enqueue_schema_panels' ) ) {
                 'emptyFaq'          => esc_html__( 'Belum ada FAQ.', 'pf2' ),
                 'emptySteps'        => esc_html__( 'Belum ada langkah HowTo.', 'pf2' ),
                 'serviceAreaValues' => esc_html__( 'Daftar area (pisahkan baris).', 'pf2' ),
+                'selectImage'       => esc_html__( 'Pilih gambar', 'pf2' ),
+                'replaceImage'      => esc_html__( 'Ganti gambar', 'pf2' ),
+                'clearImage'        => esc_html__( 'Hapus gambar', 'pf2' ),
+                'noImage'           => esc_html__( 'Belum ada gambar.', 'pf2' ),
+                'selectThumbnail'   => esc_html__( 'Pilih thumbnail', 'pf2' ),
+                'replaceThumbnail'  => esc_html__( 'Ganti thumbnail', 'pf2' ),
+                'clearThumbnail'    => esc_html__( 'Hapus thumbnail', 'pf2' ),
             ),
             'serviceAreaTypes' => array(
                 array(

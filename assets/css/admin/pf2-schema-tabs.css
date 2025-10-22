@@ -1,0 +1,68 @@
+.pf2-schema-tabs {
+  margin-top: 1em;
+}
+
+.pf2-schema-tabs__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 1em;
+}
+
+.pf2-schema-tabs__tab {
+  border: 1px solid #ccd0d4;
+  background-color: #f6f7f7;
+  color: #1d2327;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.pf2-schema-tabs__tab.is-active,
+.pf2-schema-tabs__tab:focus {
+  background-color: #2271b1;
+  color: #fff;
+  outline: none;
+}
+
+.pf2-schema-tabs__panel {
+  border: 1px solid #ccd0d4;
+  padding: 16px;
+  background-color: #fff;
+  margin-bottom: 16px;
+}
+
+.pf2-schema-tabs__panel fieldset {
+  border: 1px solid #ccd0d4;
+  padding: 12px;
+  margin: 12px 0;
+}
+
+.pf2-schema-tabs__panel legend {
+  font-weight: 600;
+}
+
+.pf2-schema-panel__group {
+  border: 1px solid #dcdcde;
+  padding: 12px;
+  margin-bottom: 12px;
+  background-color: #fbfbfc;
+}
+
+.pf2-schema-panel__group .components-button {
+  margin-top: 8px;
+}
+
+.pf2-schema-panel__media {
+  margin: 8px 0;
+}
+
+.pf2-schema-panel__media .components-button + .components-button {
+  margin-left: 8px;
+}
+
+.pf2-schema-panel__media .description {
+  margin-top: 8px;
+  color: #646970;
+}
