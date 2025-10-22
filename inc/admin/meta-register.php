@@ -69,15 +69,21 @@ if ( ! function_exists( 'pf2_meta_sanitize_number' ) ) {
                  * Sanitize a numeric meta value.
                  *
                  * Ensures the stored value respects the registered number type by
-                 * returning a float. Empty or invalid input is normalised to 0.0 so
-                 * the meta aligns with the registered default and avoids triggering
-                 * register_meta notices.
+                 * returning a float. Empty or invalid input is normalised to null so
+                 * consumers can distinguish between an author-provided value and an
+                 * unset price.
                  *
                  * @param mixed $value Raw value.
-                 * @return float
+                 * @return float|null
                  */
                 function pf2_meta_sanitize_number( $value ) {
                                 if ( is_string( $value ) ) {
+                                                $value = trim( $value );
+
+                                                if ( '' === $value ) {
+                                                                return null;
+                                                }
+
                                                 $value = str_replace( ',', '.', $value );
                                 }
 
@@ -85,7 +91,7 @@ if ( ! function_exists( 'pf2_meta_sanitize_number' ) ) {
                                                 return (float) $value;
                                 }
 
-                                return 0.0;
+                                return null;
                 }
 }
 
@@ -170,7 +176,7 @@ if ( ! function_exists( 'pf2_meta_register_post_meta' ) ) {
                                                 'pf2_price'        => array(
                                                                 'type'              => 'number',
                                                                 'sanitize_callback' => 'pf2_meta_sanitize_number',
-                                                                'default'           => 0.0,
+                                                                'default'           => null,
                                                 ),
 						'pf2_currency'     => array(
 								'type'              => 'string',
