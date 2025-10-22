@@ -57,6 +57,98 @@ if ( ! function_exists( 'pf2_schema_clean' ) ) {
     }
 }
 
+if ( ! function_exists( 'pf2_schema_get_meta_text' ) ) {
+    /**
+     * Retrieve a sanitized string meta value for schema usage.
+     *
+     * @param int    $post_id Post identifier.
+     * @param string $meta_key Meta key.
+     * @return string
+     */
+    function pf2_schema_get_meta_text( $post_id, $meta_key ) {
+        $value = get_post_meta( (int) $post_id, $meta_key, true );
+
+        if ( is_string( $value ) ) {
+            return sanitize_text_field( $value );
+        }
+
+        if ( is_scalar( $value ) ) {
+            return sanitize_text_field( (string) $value );
+        }
+
+        return '';
+    }
+}
+
+if ( ! function_exists( 'pf2_schema_array_filter_recursive' ) ) {
+    /**
+     * Recursively strip empty values from a schema fragment.
+     *
+     * Acts as a backwards compatible wrapper around {@see pf2_schema_clean()}.
+     *
+     * @param mixed $data Raw schema data.
+     * @return array<mixed>
+     */
+    function pf2_schema_array_filter_recursive( $data ) {
+        return pf2_schema_clean( $data );
+    }
+}
+
+if ( ! function_exists( 'pf2_schema_images_from_post' ) ) {
+    /**
+     * Collect image URLs associated with a post.
+     *
+     * @param int $post_id Post identifier.
+     * @return array<int, string>
+     */
+    function pf2_schema_images_from_post( $post_id ) {
+        $post_id = absint( $post_id );
+
+        if ( ! $post_id ) {
+            return array();
+        }
+
+        $images = array();
+
+        $featured_id = get_post_thumbnail_id( $post_id );
+        if ( $featured_id ) {
+            $featured_url = wp_get_attachment_image_url( $featured_id, 'full' );
+            if ( $featured_url ) {
+                $images[] = esc_url_raw( $featured_url );
+            }
+        }
+
+        $gallery_meta = get_post_meta( $post_id, 'pf2_gallery_ids', true );
+        if ( is_string( $gallery_meta ) && '' !== trim( $gallery_meta ) ) {
+            $gallery_ids = array_map( 'absint', array_filter( array_map( 'trim', explode( ',', $gallery_meta ) ) ) );
+        } elseif ( is_array( $gallery_meta ) ) {
+            $gallery_ids = array();
+            foreach ( $gallery_meta as $item ) {
+                if ( is_scalar( $item ) ) {
+                    $gallery_ids[] = absint( $item );
+                }
+            }
+        } else {
+            $gallery_ids = array();
+        }
+
+        foreach ( $gallery_ids as $gallery_id ) {
+            if ( ! $gallery_id ) {
+                continue;
+            }
+
+            $image_url = wp_get_attachment_image_url( $gallery_id, 'full' );
+            if ( $image_url ) {
+                $images[] = esc_url_raw( $image_url );
+            }
+        }
+
+        $images = array_values( array_unique( array_filter( $images ) ) );
+
+        return $images;
+    }
+}
+
 if ( ! function_exists( 'pf2_schema_merge' ) ) {
     /**
      * Flatten a list of schema fragments into a single dimensional array.

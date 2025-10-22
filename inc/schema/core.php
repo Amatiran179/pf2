@@ -21,6 +21,11 @@ require_once get_template_directory() . '/inc/schema/global/schema-sitenav.php';
 require_once get_template_directory() . '/inc/schema/global/schema-organization.php';
 require_once get_template_directory() . '/inc/schema/global/schema-logo.php';
 require_once get_template_directory() . '/inc/schema/localbusiness.php';
+require_once get_template_directory() . '/inc/schema/article.php';
+require_once get_template_directory() . '/inc/schema/product.php';
+require_once get_template_directory() . '/inc/schema/tourist-attraction.php';
+require_once get_template_directory() . '/inc/schema/extras/loader.php';
+require_once get_template_directory() . '/inc/schema/default-types.php';
 
 if ( ! function_exists( 'pf2_schema_output' ) ) {
     /**
