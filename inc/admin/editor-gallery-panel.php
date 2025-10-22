@@ -56,10 +56,10 @@ if ( ! function_exists( 'pf2_gallery_enqueue_assets' ) ) {
          *
          * @return void
          */
-        function pf2_gallery_enqueue_assets() {
-                static $enqueued = false;
+        function pf2_gallery_enqueue_assets( $context = 'default' ) {
+                static $enqueued = array();
 
-                if ( $enqueued ) {
+                if ( isset( $enqueued[ $context ] ) && $enqueued[ $context ] ) {
                         return;
                 }
 
@@ -140,7 +140,7 @@ if ( ! function_exists( 'pf2_gallery_enqueue_assets' ) ) {
                 wp_localize_script( 'pf2-gallery-panel', 'pf2GalleryPanel', $config );
                 wp_set_script_translations( 'pf2-gallery-panel', 'pf2' );
 
-                $enqueued = true;
+                $enqueued[ $context ] = true;
         }
 }
 
@@ -151,7 +151,7 @@ if ( ! function_exists( 'pf2_gallery_enqueue_block_editor_assets' ) ) {
          * @return void
          */
         function pf2_gallery_enqueue_block_editor_assets() {
-                pf2_gallery_enqueue_assets();
+                pf2_gallery_enqueue_assets( 'block-editor' );
         }
 }
 add_action( 'enqueue_block_editor_assets', 'pf2_gallery_enqueue_block_editor_assets' );
@@ -168,7 +168,7 @@ if ( ! function_exists( 'pf2_gallery_enqueue_classic_assets' ) ) {
                         return;
                 }
 
-                pf2_gallery_enqueue_assets();
+                pf2_gallery_enqueue_assets( 'classic-editor' );
         }
 }
 add_action( 'admin_enqueue_scripts', 'pf2_gallery_enqueue_classic_assets' );
