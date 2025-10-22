@@ -1,6 +1,6 @@
 # PutraFiber v2.0.0
 
-🚀 WordPress Theme Profesional untuk <a href="https://putrafiber.com"><strong>Kontraktor Waterpark, Waterboom dan Produsen Fasilitas Wahana Wisata</strong></a>
+🚀 WordPress Theme Profesional untuk <b>PUTRA FIBER</b> <a href="https://putrafiber.com"><strong>Kontraktor Waterpark, Waterboom dan Produsen Fasilitas Wahana Wisata</strong></a>
 
 ## ✨ Fitur Utama
 
