@@ -275,14 +275,14 @@ if ( ! function_exists( 'pf2_admin_save_product_meta' ) ) {
 						update_post_meta( $post_id, $key, $value );
 				}
 
-				$price_value = isset( $_POST['pf2_price'] ) ? wp_unslash( $_POST['pf2_price'] ) : '';
-				$price_value = pf2_meta_sanitize_number( $price_value );
+                                $price_raw   = isset( $_POST['pf2_price'] ) ? wp_unslash( $_POST['pf2_price'] ) : '';
+                                $price_value = pf2_meta_sanitize_number( $price_raw );
 
-				if ( null === $price_value ) {
-						delete_post_meta( $post_id, 'pf2_price' );
-				} else {
-						update_post_meta( $post_id, 'pf2_price', $price_value );
-				}
+                                if ( '' === trim( (string) $price_raw ) ) {
+                                                delete_post_meta( $post_id, 'pf2_price' );
+                                } else {
+                                                update_post_meta( $post_id, 'pf2_price', $price_value );
+                                }
 
 				$sku = get_post_meta( $post_id, 'pf2_sku', true );
 

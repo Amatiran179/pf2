@@ -65,27 +65,28 @@ if ( ! function_exists( 'pf2_meta_sanitize_textarea' ) ) {
 }
 
 if ( ! function_exists( 'pf2_meta_sanitize_number' ) ) {
-		/**
-		 * Sanitize a numeric meta value.
-		 *
-		 * @param mixed $value Raw value.
-		 * @return float|null
-		 */
-		function pf2_meta_sanitize_number( $value ) {
-				if ( '' === $value || null === $value ) {
-						return null;
-				}
+                /**
+                 * Sanitize a numeric meta value.
+                 *
+                 * Ensures the stored value respects the registered number type by
+                 * returning a float. Empty or invalid input is normalised to 0.0 so
+                 * the meta aligns with the registered default and avoids triggering
+                 * register_meta notices.
+                 *
+                 * @param mixed $value Raw value.
+                 * @return float
+                 */
+                function pf2_meta_sanitize_number( $value ) {
+                                if ( is_string( $value ) ) {
+                                                $value = str_replace( ',', '.', $value );
+                                }
 
-				if ( is_string( $value ) ) {
-						$value = str_replace( ',', '.', $value );
-				}
+                                if ( is_numeric( $value ) ) {
+                                                return (float) $value;
+                                }
 
-				if ( is_numeric( $value ) ) {
-						return (float) $value;
-				}
-
-				return null;
-		}
+                                return 0.0;
+                }
 }
 
 if ( ! function_exists( 'pf2_meta_sanitize_gallery_csv' ) ) {
@@ -166,11 +167,11 @@ if ( ! function_exists( 'pf2_meta_register_post_meta' ) ) {
 								'sanitize_callback' => 'pf2_meta_sanitize_text',
 								'default'           => $product_defaults['pf2_size'],
 						),
-						'pf2_price'        => array(
-								'type'              => 'number',
-								'sanitize_callback' => 'pf2_meta_sanitize_number',
-								'default'           => null,
-						),
+                                                'pf2_price'        => array(
+                                                                'type'              => 'number',
+                                                                'sanitize_callback' => 'pf2_meta_sanitize_number',
+                                                                'default'           => 0.0,
+                                                ),
 						'pf2_currency'     => array(
 								'type'              => 'string',
 								'sanitize_callback' => 'pf2_meta_sanitize_text',
