@@ -33,12 +33,24 @@ if ( ! function_exists( 'pf2_schema_build_product' ) ) {
 				$color    = pf2_schema_get_meta_text( $post_id, 'pf2_color' );
 				$size     = pf2_schema_get_meta_text( $post_id, 'pf2_size' );
 
-$price_raw = get_post_meta( $post_id, 'pf2_price', true );
-$price     = ( '' !== $price_raw && null !== $price_raw && is_numeric( $price_raw ) ) ? (string) (float) $price_raw : null;
+				$price_raw = get_post_meta( $post_id, 'pf2_price', true );
+				$price     = ( '' !== $price_raw && null !== $price_raw && is_numeric( $price_raw ) ) ? (string) (float) $price_raw : null;
 
 				$currency = pf2_schema_get_meta_text( $post_id, 'pf2_currency' );
 				if ( '' === $currency ) {
 						$currency = 'IDR';
+				}
+
+				$offers = array();
+				if ( null !== $price ) {
+						$offers = array(
+								'@type'         => 'Offer',
+								'priceCurrency' => $currency,
+								'price'         => $price,
+								'availability'  => 'https://schema.org/InStock',
+								'url'           => esc_url_raw( get_permalink( $post ) ),
+								'validFrom'     => get_post_time( 'c', true, $post ),
+								);
 				}
 
 				$brand = 'PutraFiber';
@@ -89,14 +101,7 @@ $price     = ( '' !== $price_raw && null !== $price_raw && is_numeric( $price_ra
 						'color'               => $color,
 						'size'                => $size,
 						'additionalProperty'  => $additional_properties,
-						'offers'              => array(
-								'@type'         => 'Offer',
-								'priceCurrency' => $currency,
-								'price'         => $price,
-								'availability'  => 'https://schema.org/InStock',
-								'url'           => esc_url_raw( get_permalink( $post ) ),
-								'validFrom'     => get_post_time( 'c', true, $post ),
-						),
+						'offers'              => $offers,
 				);
 
 				return pf2_schema_array_filter_recursive( $data );
