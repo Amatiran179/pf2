@@ -33,8 +33,8 @@ if ( ! function_exists( 'pf2_schema_build_product' ) ) {
 				$color    = pf2_schema_get_meta_text( $post_id, 'pf2_color' );
 				$size     = pf2_schema_get_meta_text( $post_id, 'pf2_size' );
 
-				$price_raw = get_post_meta( $post_id, 'pf2_price', true );
-				$price     = ( '' !== $price_raw && null !== $price_raw && is_numeric( $price_raw ) ) ? (string) (float) $price_raw : '1000';
+$price_raw = get_post_meta( $post_id, 'pf2_price', true );
+$price     = ( '' !== $price_raw && null !== $price_raw && is_numeric( $price_raw ) ) ? (string) (float) $price_raw : null;
 
 				$currency = pf2_schema_get_meta_text( $post_id, 'pf2_currency' );
 				if ( '' === $currency ) {
