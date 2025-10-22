@@ -104,9 +104,8 @@ if ( ! function_exists( 'pf2_admin_render_product_metabox' ) ) {
 						'pf2_size'        => 'Bisa Custom Sesuai Permintaan',
 						'pf2_currency'    => 'IDR',
 						'pf2_price'       => '',
-						'pf2_features'    => '',
-						'pf2_gallery_ids' => '',
-						'pf2_wa'          => '',
+                                               'pf2_features'    => '',
+                                               'pf2_wa'          => '',
 						'pf2_sku'         => '',
 				);
 
@@ -166,10 +165,6 @@ if ( ! function_exists( 'pf2_admin_render_product_metabox' ) ) {
 										<th scope="row"><label for="pf2_features"><?php esc_html_e( 'Fitur / Catatan Singkat', 'pf2' ); ?></label></th>
 										<td><textarea id="pf2_features" name="pf2_features" rows="4" class="large-text"><?php echo esc_textarea( $values['pf2_features'] ); ?></textarea></td>
 								</tr>
-								<tr>
-										<th scope="row"><label for="pf2_gallery_ids"><?php esc_html_e( 'Galeri Gambar (ID attachment, pisahkan dengan koma)', 'pf2' ); ?></label></th>
-										<td><textarea id="pf2_gallery_ids" name="pf2_gallery_ids" rows="3" class="large-text code"><?php echo esc_textarea( $values['pf2_gallery_ids'] ); ?></textarea></td>
-								</tr>
 						</tbody>
 				</table>
 				<?php
@@ -187,8 +182,7 @@ if ( ! function_exists( 'pf2_admin_render_portfolio_metabox' ) ) {
 				$defaults = array(
 						'pf2_client'       => '',
 						'pf2_location'     => '',
-						'pf2_product_name' => '',
-						'pf2_gallery_ids'  => '',
+                                               'pf2_product_name' => '',
 				);
 
 				$values = array();
@@ -213,10 +207,6 @@ if ( ! function_exists( 'pf2_admin_render_portfolio_metabox' ) ) {
 								<tr>
 										<th scope="row"><label for="pf2_product_name"><?php esc_html_e( 'Produk / Layanan', 'pf2' ); ?></label></th>
 										<td><input type="text" id="pf2_product_name" name="pf2_product_name" class="regular-text" value="<?php echo esc_attr( $values['pf2_product_name'] ); ?>" /></td>
-								</tr>
-								<tr>
-										<th scope="row"><label for="pf2_gallery_ids"><?php esc_html_e( 'Galeri Gambar (ID attachment, pisahkan dengan koma)', 'pf2' ); ?></label></th>
-										<td><textarea id="pf2_gallery_ids" name="pf2_gallery_ids" rows="3" class="large-text code"><?php echo esc_textarea( $values['pf2_gallery_ids'] ); ?></textarea></td>
 								</tr>
 						</tbody>
 				</table>
@@ -265,8 +255,7 @@ if ( ! function_exists( 'pf2_admin_save_product_meta' ) ) {
 						'pf2_size'        => 'pf2_meta_sanitize_text',
 						'pf2_currency'    => 'pf2_meta_sanitize_text',
 						'pf2_wa'          => 'pf2_meta_sanitize_text',
-						'pf2_features'    => 'pf2_meta_sanitize_textarea',
-						'pf2_gallery_ids' => 'pf2_meta_sanitize_gallery_csv',
+                                               'pf2_features'    => 'pf2_meta_sanitize_textarea',
 				);
 
 				foreach ( $fields as $key => $callback ) {
@@ -330,8 +319,7 @@ if ( ! function_exists( 'pf2_admin_save_portfolio_meta' ) ) {
 				$fields = array(
 						'pf2_client'       => 'pf2_meta_sanitize_text',
 						'pf2_location'     => 'pf2_meta_sanitize_text',
-						'pf2_product_name' => 'pf2_meta_sanitize_text',
-						'pf2_gallery_ids'  => 'pf2_meta_sanitize_gallery_csv',
+                                               'pf2_product_name' => 'pf2_meta_sanitize_text',
 				);
 
 				foreach ( $fields as $key => $callback ) {

@@ -79,20 +79,14 @@ if ( ! function_exists( 'pf2_admin_enqueue_editor_panels' ) ) {
 						$options['catalogUrl'] = (string) pf2_options_get( 'catalog_url', '' );
 				}
 
-				$config = array(
-						'postType' => $screen->post_type,
-						'defaults' => array(
-								'product'   => $product_defaults,
-								'portfolio' => array(),
-						),
-						'options'  => $options,
-						'i18n'     => array(
-								'galleryButton' => esc_html__( 'Pilih Gambar Galeri', 'pf2' ),
-								'galleryEmpty'  => esc_html__( 'Belum ada gambar yang dipilih.', 'pf2' ),
-								'removeImage'   => esc_html__( 'Hapus', 'pf2' ),
-								'clearGallery'  => esc_html__( 'Kosongkan galeri', 'pf2' ),
-						),
-				);
+                                $config = array(
+                                                'postType' => $screen->post_type,
+                                                'defaults' => array(
+                                                                'product'   => $product_defaults,
+                                                                'portfolio' => array(),
+                                                ),
+                                                'options'  => $options,
+                                );
 
 				wp_localize_script( 'pf2-editor-panels', 'pf2EditorPanels', $config );
 				wp_set_script_translations( 'pf2-editor-panels', 'pf2' );

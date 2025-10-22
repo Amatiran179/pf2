@@ -188,16 +188,11 @@ if ( ! function_exists( 'pf2_meta_register_post_meta' ) ) {
 								'sanitize_callback' => 'pf2_meta_sanitize_text',
 								'default'           => '',
 						),
-						'pf2_features'     => array(
-								'type'              => 'string',
-								'sanitize_callback' => 'pf2_meta_sanitize_textarea',
-								'default'           => '',
-						),
-						'pf2_gallery_ids'  => array(
-								'type'              => 'string',
-								'sanitize_callback' => 'pf2_meta_sanitize_gallery_csv',
-								'default'           => '',
-						),
+                                               'pf2_features'     => array(
+                                                               'type'              => 'string',
+                                                               'sanitize_callback' => 'pf2_meta_sanitize_textarea',
+                                                               'default'           => '',
+                                               ),
 				);
 
 				foreach ( $product_meta as $key => $args ) {
@@ -226,16 +221,11 @@ if ( ! function_exists( 'pf2_meta_register_post_meta' ) ) {
 								'sanitize_callback' => 'pf2_meta_sanitize_text',
 								'default'           => '',
 						),
-						'pf2_product_name' => array(
-								'type'              => 'string',
-								'sanitize_callback' => 'pf2_meta_sanitize_text',
-								'default'           => '',
-						),
-						'pf2_gallery_ids'  => array(
-								'type'              => 'string',
-								'sanitize_callback' => 'pf2_meta_sanitize_gallery_csv',
-								'default'           => '',
-						),
+                                               'pf2_product_name' => array(
+                                                               'type'              => 'string',
+                                                               'sanitize_callback' => 'pf2_meta_sanitize_text',
+                                                               'default'           => '',
+                                               ),
 				);
 
 				foreach ( $portfolio_meta as $key => $args ) {
