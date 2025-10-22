@@ -17,9 +17,9 @@ if ( ! function_exists( 'pf2_admin_get_settings_schema' ) ) {
 	 *
 	 * @return array<string, array<string, mixed>>
 	 */
-	function pf2_admin_get_settings_schema() {
-		return array(
-			'general'      => array(
+        function pf2_admin_get_settings_schema() {
+                $schema = array(
+                        'general'      => array(
 				'title'       => __( 'General', 'pf2' ),
 				'description' => __( 'Global defaults for brand accent, contact, and footer copy.', 'pf2' ),
 				'fields'      => array(
@@ -133,9 +133,19 @@ if ( ! function_exists( 'pf2_admin_get_settings_schema' ) ) {
 						'description' => __( 'Override automatic detection and force schema output.', 'pf2' ),
 					),
 				),
-			),
-		);
-	}
+                        ),
+                );
+
+                /**
+                 * Filter the admin settings schema configuration.
+                 *
+                 * Allows extensions to register custom tabs and fields without
+                 * modifying the base schema definition.
+                 *
+                 * @param array<string, array<string, mixed>> $schema Settings schema map.
+                 */
+                return apply_filters( 'pf2/admin/settings-schema', $schema );
+        }
 }
 
 if ( ! function_exists( 'pf2_admin_register_settings' ) ) {
@@ -244,6 +254,24 @@ if ( ! function_exists( 'pf2_admin_render_field' ) ) {
                                         $aria_attribute
                                 );
                                 break;
+                        case 'select':
+                                $choices = isset( $args['choices'] ) && is_array( $args['choices'] ) ? $args['choices'] : array();
+                                echo '<select id="' . esc_attr( $id ) . '" name="pf2_options[' . esc_attr( $key ) . ']" class="' . esc_attr( $class ) . '"' . $aria_attribute . '>';
+                                foreach ( $choices as $choice_value => $choice_label ) {
+                                        printf(
+                                                '<option value="%1$s"%3$s>%2$s</option>',
+                                                esc_attr( $choice_value ),
+                                                esc_html( $choice_label ),
+                                                selected( (string) $value, (string) $choice_value, false )
+                                        );
+                                }
+                                echo '</select>';
+                                break;
+                        case 'callback':
+                                if ( isset( $args['render_callback'] ) && is_callable( $args['render_callback'] ) ) {
+                                        call_user_func( $args['render_callback'], $args, $value, $id, $aria_attribute );
+                                }
+                                break;
                         default:
                                 $attr_html = '';
                                 foreach ( $attributes as $attr_key => $attr_value ) {
@@ -293,8 +321,8 @@ if ( ! function_exists( 'pf2_options_sanitize' ) ) {
 				$mode    = isset( $field['sanitize'] ) ? $field['sanitize'] : 'string';
 				$default = isset( $defaults[ $key ] ) ? $defaults[ $key ] : '';
 
-				switch ( $mode ) {
-					case 'bool':
+                                switch ( $mode ) {
+                                        case 'bool':
 						$sanitized[ $key ] = ! empty( $input[ $key ] ) ? 1 : 0;
 						break;
 					case 'url':
@@ -314,15 +342,134 @@ if ( ! function_exists( 'pf2_options_sanitize' ) ) {
 							$sanitized[ $key ] = $default;
 						}
 						break;
-					case 'textarea':
-						if ( isset( $input[ $key ] ) ) {
-							$sanitized[ $key ] = sanitize_textarea_field( wp_unslash( $input[ $key ] ) );
-						} else {
-							$sanitized[ $key ] = '';
-						}
-						break;
-					default:
-						if ( isset( $input[ $key ] ) ) {
+                                        case 'textarea':
+                                                if ( isset( $input[ $key ] ) ) {
+                                                        $sanitized[ $key ] = sanitize_textarea_field( wp_unslash( $input[ $key ] ) );
+                                                } else {
+                                                        $sanitized[ $key ] = '';
+                                                }
+                                                break;
+                                        case 'float':
+                                                $raw = isset( $input[ $key ] ) ? wp_unslash( $input[ $key ] ) : '';
+                                                if ( is_numeric( $raw ) ) {
+                                                        $sanitized[ $key ] = (string) round( (float) $raw, 6 );
+                                                } else {
+                                                        $sanitized[ $key ] = '';
+                                                }
+                                                break;
+                                        case 'phone':
+                                                $raw = isset( $input[ $key ] ) ? wp_unslash( $input[ $key ] ) : '';
+                                                if ( is_string( $raw ) ) {
+                                                        $filtered = preg_replace( '/[^0-9+()\-\s\.]/', '', $raw );
+                                                        $sanitized[ $key ] = sanitize_text_field( $filtered );
+                                                } else {
+                                                        $sanitized[ $key ] = '';
+                                                }
+                                                break;
+                                        case 'schema_localbusiness_type':
+                                                $raw      = isset( $input[ $key ] ) ? sanitize_text_field( wp_unslash( $input[ $key ] ) ) : 'LocalBusiness';
+                                                $allowed  = isset( $field['choices'] ) && is_array( $field['choices'] ) ? array_keys( $field['choices'] ) : array();
+                                                $fallback = 'LocalBusiness';
+                                                if ( empty( $allowed ) ) {
+                                                        $allowed = array( 'LocalBusiness' );
+                                                }
+
+                                                if ( in_array( $raw, $allowed, true ) ) {
+                                                        $sanitized[ $key ] = $raw;
+                                                } else {
+                                                        $sanitized[ $key ] = $fallback;
+                                                }
+                                                break;
+                                        case 'url_array':
+                                                $value = isset( $input[ $key ] ) ? $input[ $key ] : array();
+                                                if ( ! is_array( $value ) ) {
+                                                        $value = array( $value );
+                                                }
+
+                                                $value = array_map( 'wp_unslash', $value );
+                                                $value = array_map( 'trim', $value );
+                                                $value = array_filter( $value );
+
+                                                $urls = array();
+                                                foreach ( $value as $item ) {
+                                                        $url = esc_url_raw( $item );
+                                                        if ( '' !== $url ) {
+                                                                $urls[] = $url;
+                                                        }
+                                                }
+
+                                                $sanitized[ $key ] = array_values( array_unique( $urls ) );
+                                                break;
+                                        case 'opening_hours':
+                                                $value = isset( $input[ $key ] ) ? $input[ $key ] : array();
+                                                if ( ! is_array( $value ) ) {
+                                                        $value = array();
+                                                }
+
+                                                $sanitized_rows = array();
+                                                $days_map       = array(
+                                                        'monday'    => 'Monday',
+                                                        'tuesday'   => 'Tuesday',
+                                                        'wednesday' => 'Wednesday',
+                                                        'thursday'  => 'Thursday',
+                                                        'friday'    => 'Friday',
+                                                        'saturday'  => 'Saturday',
+                                                        'sunday'    => 'Sunday',
+                                                );
+
+                                                foreach ( $value as $row ) {
+                                                        if ( ! is_array( $row ) ) {
+                                                                continue;
+                                                        }
+
+                                                        $day_key = isset( $row['dayOfWeek'] ) ? strtolower( sanitize_key( $row['dayOfWeek'] ) ) : '';
+                                                        $opens   = isset( $row['opens'] ) ? sanitize_text_field( wp_unslash( $row['opens'] ) ) : '';
+                                                        $closes  = isset( $row['closes'] ) ? sanitize_text_field( wp_unslash( $row['closes'] ) ) : '';
+
+                                                        if ( ! isset( $days_map[ $day_key ] ) ) {
+                                                                continue;
+                                                        }
+
+                                                        if ( ! preg_match( '/^\d{2}:\d{2}$/', $opens ) || ! preg_match( '/^\d{2}:\d{2}$/', $closes ) ) {
+                                                                continue;
+                                                        }
+
+                                                        $sanitized_rows[] = array(
+                                                                'dayOfWeek' => $days_map[ $day_key ],
+                                                                'opens'     => $opens,
+                                                                'closes'    => $closes,
+                                                        );
+                                                }
+
+                                                $unique = array();
+                                                foreach ( $sanitized_rows as $row ) {
+                                                        $hash = implode( '|', $row );
+                                                        $unique[ $hash ] = $row;
+                                                }
+
+                                                $sanitized[ $key ] = array_values( $unique );
+                                                break;
+                                        case 'int_array':
+                                                $value = isset( $input[ $key ] ) ? $input[ $key ] : array();
+                                                if ( ! is_array( $value ) ) {
+                                                        $value = array( $value );
+                                                }
+
+                                                $ids = array();
+                                                foreach ( $value as $id ) {
+                                                        $id = absint( $id );
+                                                        if ( $id ) {
+                                                                $ids[] = $id;
+                                                        }
+                                                }
+
+                                                $sanitized[ $key ] = array_values( array_unique( $ids ) );
+                                                break;
+                                        case 'noop':
+                                                // Preserve the current stored value when no sanitization is required.
+                                                break;
+                                        default:
+                                                if ( isset( $input[ $key ] ) ) {
 							$sanitized[ $key ] = sanitize_text_field( wp_unslash( $input[ $key ] ) );
 						} else {
 							$sanitized[ $key ] = '';

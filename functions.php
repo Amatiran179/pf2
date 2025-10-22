@@ -29,6 +29,7 @@ if ( is_admin() ) {
         require_once get_template_directory() . '/inc/admin/editor-panels.php';
         require_once get_template_directory() . '/inc/admin/metaboxes.php';
         require_once get_template_directory() . '/inc/admin/settings-ui.php';
+        require_once get_template_directory() . '/inc/admin/schema-options.php';
         require_once get_template_directory() . '/inc/admin/menu.php';
         require_once get_template_directory() . '/inc/admin/dashboard.php';
         require_once get_template_directory() . '/inc/admin/exporter.php';
