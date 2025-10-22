@@ -170,7 +170,6 @@ if ( ! function_exists( 'pf2_meta_register_post_meta' ) ) {
                                                'pf2_price'        => array(
                                                                'type'              => 'number',
                                                                'sanitize_callback' => 'pf2_meta_sanitize_number',
-                                                               'default'           => 1000.0,
                                                ),
 						'pf2_currency'     => array(
 								'type'              => 'string',
