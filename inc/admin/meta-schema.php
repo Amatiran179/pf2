@@ -242,7 +242,7 @@ if ( ! function_exists( 'pf2_schema_meta_sanitize_servicearea_type' ) ) {
      * @return string
      */
     function pf2_schema_meta_sanitize_servicearea_type( $value ) {
-        $allowed = array( 'City', 'Country', 'Region', 'PostalAddress', 'GeoShape' );
+        $allowed = array( '', 'City', 'Country', 'Region', 'PostalAddress', 'GeoShape' );
         $value   = pf2_schema_meta_sanitize_string( $value );
 
         if ( ! in_array( $value, $allowed, true ) ) {
@@ -539,7 +539,7 @@ if ( ! function_exists( 'pf2_schema_meta_register' ) ) {
                     'show_in_rest'      => array(
                         'schema' => array(
                             'type' => 'string',
-                            'enum' => array( 'City', 'Country', 'Region', 'PostalAddress', 'GeoShape' ),
+                            'enum' => array( '', 'City', 'Country', 'Region', 'PostalAddress', 'GeoShape' ),
                         ),
                     ),
                 )
